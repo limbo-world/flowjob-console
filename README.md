@@ -1,4 +1,4 @@
-# flowjob-console 
+# flowjob-console
 
 ## Project setup
 ```
