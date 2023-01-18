@@ -1,0 +1,7 @@
+{
+    "menus": {
+        "home": "首页",
+        "planManage": "任务管理",
+        "planList": "任务列表"
+    }
+}
