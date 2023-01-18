@@ -1,3 +1,7 @@
+interface Window {
+    $request: any
+}
+
 /**
  * @description 菜单配置
  */
