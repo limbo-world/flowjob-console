@@ -21,23 +21,24 @@
         <template v-for="menu in menus">
           <!-- 当前菜单无子菜单，即叶子菜单，直接渲染router-link -->
           <el-menu-item v-if="!hasChildren(menu)" :index="menu.code" :route="menu.route" :class="menuHiddenClass">
-            <em class="menu-icon" :class="menu.icon"></em>
+            <component :is="menu.icon" class="menu-icon"/>
             <span>{{ $t(menu.name) }}</span>
           </el-menu-item>
 
           <!-- 存在子菜单时，先渲染当前菜单 -->
-          <el-submenu v-else :index="menu.code" :key="menu.name" :class="menuHiddenClass">
+          <el-sub-menu v-else :index="menu.code" :key="menu.name" :class="menuHiddenClass">
             <template v-slot:title>
-              <em class="menu-icon" :class="menu.icon"></em>
+              <component :is="menu.icon" class="menu-icon"/>
               <span>{{ $t(menu.name) }}</span>
             </template>
 
             <!-- 这里不再考虑孙菜单的情况，只支持二级菜单 -->
-            <el-menu-item v-for="subMenu in menu.children" :key="subMenu.route" :index="subMenu.route" :route="{'path': subMenu.route}">
-              <em :class="'menu-icon ' + subMenu.icon"></em>
+            <el-menu-item v-for="subMenu in menu.children" :key="subMenu.route" :index="subMenu.route"
+                          :route="{'path': subMenu.route}">
+              <component :is="subMenu.icon" class="menu-icon"/>
               <span>{{ $t(subMenu.name) }}</span>
             </el-menu-item>
-          </el-submenu>
+          </el-sub-menu>
         </template>
       </el-menu>
     </scroll-view>
@@ -69,9 +70,7 @@ export default {
     pages.layoutMenu = this;
   },
 
-  watch: {
-
-  },
+  watch: {},
 
   methods: {
     hasChildren(m) {
@@ -106,6 +105,7 @@ export default {
       margin-left: 10px;
       color: aliceblue;
     }
+
     img {
       width: 70%;
     }
@@ -143,17 +143,26 @@ export default {
       margin-right: 10px;
       overflow: hidden;
       vertical-align: baseline;
-    }
-  }
-
-  .el-submenu,.el-menu-item {
-    &.menu-hidden .menu-icon {
-      margin-right: 0;
-    }
-    .menu-icon.fa {
       width: 14px;
       height: 14px;
       font-size: 10px;
+    }
+  }
+
+  .el-sub-menu__title {
+    .menu-icon {
+      margin-right: 10px;
+      overflow: hidden;
+      vertical-align: baseline;
+      width: 14px;
+      height: 14px;
+      font-size: 10px;
+    }
+  }
+
+  .el-submenu, .el-menu-item {
+    &.menu-hidden .menu-icon {
+      margin-right: 0;
     }
   }
 
