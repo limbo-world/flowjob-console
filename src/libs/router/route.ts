@@ -11,9 +11,17 @@ export default [
                 component: () => import("@/views/home/Home.vue"),
             },
             {
-                path: '/plan',
-                component: () => import("@/views/plan/Plan.vue"),
-            }
+                path: '/plan/list',
+                component: () => import("@/views/plan/PlanList.vue"),
+            },
+            {
+                path: '/plan/execute-record',
+                component: () => import("@/views/plan/PLanExecuteRecord.vue"),
+            },
+            {
+                path: '/worker/list',
+                component: () => import("@/views/worker/WorkerList.vue"),
+            },
         ]
     }
 ] as Array<RouteRecordRaw>;
