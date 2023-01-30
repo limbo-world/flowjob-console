@@ -2,6 +2,8 @@
     "menus": {
         "home": "首页",
         "planManage": "任务管理",
-        "planList": "任务列表"
+        "planList": "任务列表",
+        "planExecuteRecord": "执行记录",
+        "workerList": "节点管理"
     }
 }

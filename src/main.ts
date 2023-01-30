@@ -8,7 +8,7 @@ import {axiosPlugin} from '@/libs/axios';
 
 // 样式
 import "element-plus/dist/index.css";
-import './style.scss';
+import '@/style.scss';
 
 const app = createApp(App)
 

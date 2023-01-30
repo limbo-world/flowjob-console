@@ -2,6 +2,8 @@
     "menus": {
         "home": "Home",
         "planManage": "Plan Manage",
-        "planList": "Plan List"
+        "planList": "Plan List",
+        "planExecuteRecord": "Execute Record",
+        "workerList": "Worker List"
     }
 }

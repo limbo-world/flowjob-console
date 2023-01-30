@@ -13,7 +13,7 @@ import en from "element-plus/lib/locale/lang/en";
 export default defineComponent({
   name: "app",
   created() {
-    window.pages = {};
+    window.pages = {}; // todo
   },
   components: {
     [ElConfigProvider.name]: ElConfigProvider
