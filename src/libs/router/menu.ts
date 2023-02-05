@@ -19,7 +19,7 @@ export default [
                 code: "202",
                 icon: "el-icon-collection-tag",
                 name: "menus.planExecuteRecord",
-                route: "/plan/execute-record",
+                route: "/plan/instance/list",
             },
         ]
     },
