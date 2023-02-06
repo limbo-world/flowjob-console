@@ -15,12 +15,20 @@ export default [
                 component: () => import("@/views/plan/PlanList.vue"),
             },
             {
-                path: '/plan/execute-record',
-                component: () => import("@/views/plan/PLanExecuteRecord.vue"),
+                path: '/plan/instance/list',
+                component: () => import("@/views/plan/PLanInstanceList.vue"),
+            },
+            {
+                path: '/plan/workflow/detail',
+                component: () => import("@/views/plan/WorkflowDetail.vue"),
             },
             {
                 path: '/worker/list',
                 component: () => import("@/views/worker/WorkerList.vue"),
+            },
+            {
+                path: '/test/workflow',
+                component: () => import("@/views/plan/WorkflowDetail.vue"),
             },
         ]
     }
