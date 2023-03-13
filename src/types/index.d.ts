@@ -17,3 +17,9 @@ interface MenuConfig {
     /** 子路菜单 */
     children?: Array<MenuConfig>;
 }
+
+interface NodeStatus {
+    id: string
+    status: 'default' | 'success' | 'failed' | 'running'
+    label?: string
+}
