@@ -71,7 +71,7 @@ loadWorkers();
 <style lang="scss">
 .el-table {
   .operations {
-    .el-buttion {
+    .el-button {
       font-size: 10px;
     }
   }

@@ -19,13 +19,17 @@
         <el-table-column prop="description" label="描述"></el-table-column>
         <el-table-column label="是否启用" width="100">
           <template #default="scope">
-            {{ scope.row.enabled ? "已启用" : "未启用" }}
+            <el-switch v-model="scope.row.enabled"
+                       @change="v => {changeEnable(scope.row.planId, v)}"
+                       active-color="#13ce66"
+                       inactive-color="#ff4949"></el-switch>
           </template>
         </el-table-column>
-        <el-table-column label="操作" width="100">
+        <el-table-column label="操作" width="200">
           <template #default="scope">
-            <div class="operations">
-            </div>
+            <el-button link type="primary" @click="toInfo(scope.row.planId)">查看</el-button>
+            <el-button link type="primary" @click="toInfo(scope.row.planId)">编辑</el-button>
+            <el-button link type="primary" @click="toInfo(scope.row.planId)">删除</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -44,8 +48,11 @@
 <script setup lang="ts">
 import {Edit, CirclePlus, Search} from '@element-plus/icons-vue'
 import {getCurrentInstance, ref, reactive} from "vue";
+import { useRouter } from 'vue-router'
 
 const {proxy}: any = getCurrentInstance();
+
+let router = useRouter();
 
 const queryForm = reactive({
   name: '',
@@ -56,12 +63,34 @@ const queryForm = reactive({
 
 let plans = ref([])
 
+// 加载列表
 const loadPlans = () => {
   proxy.$request.get(`/api/v1/plan`, {params: queryForm}).then((response: any) => {
     let page = response.data
     plans.value = page.data;
     queryForm.total = page.total;
   });
+}
+
+// 切换开关
+const changeEnable = (planId: any, enable: any) => {
+  console.log(planId, enable)
+  if (enable) {
+    proxy.$request.put(`/api/v1/plan/${planId}/start`).then((response: any) => {
+      loadPlans();
+    })
+  } else {
+    proxy.$request.put(`/api/v1/plan/${planId}/stop`).then((response: any) => {
+      loadPlans();
+    })
+  }
+}
+
+// 跳转到详情
+const toInfo = (planId: any) => {
+  router.push({path: '/plan/edit',
+    query: {planId: planId}
+  })
 }
 
 // 初始化
@@ -72,7 +101,7 @@ loadPlans();
 <style lang="scss">
 .el-table {
   .operations {
-    .el-buttion {
+    .el-button {
       font-size: 10px;
     }
   }
