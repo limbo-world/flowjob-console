@@ -12,11 +12,11 @@ export default [
             },
             {
                 path: '/plan/list',
-                component: () => import("@/views/plan/PlanInfo.vue"),
+                component: () => import("@/views/plan/PlanList.vue"),
             },
             {
-                path: '/plan/info',
-                component: () => import("@/views/plan/PlanInfo.vue"),
+                path: '/plan/edit',
+                component: () => import("@/views/plan/PlanEdit.vue"),
             },
             {
                 path: '/plan/instance/list',

@@ -7,7 +7,7 @@
         </el-form-item>
         <el-form-item>
           <el-button type="primary" @click="loadPlans" :icon="Search">查询</el-button>
-          <el-button type="primary" @click="() =>{dialogOpened = true;}" :icon="CirclePlus">新增</el-button>
+          <el-button type="primary" @click="() => toInfo(null)" :icon="CirclePlus">新增</el-button>
         </el-form-item>
       </el-form>
     </el-header>
