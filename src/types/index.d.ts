@@ -23,3 +23,8 @@ interface NodeStatus {
     status: 'default' | 'success' | 'failed' | 'running'
     label?: string
 }
+
+interface LabelEnum {
+    label: string;
+    value: any;
+}
