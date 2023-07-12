@@ -7,7 +7,8 @@
         </el-form-item>
         <el-form-item>
           <el-button type="primary" @click="loadPlans" :icon="Search">查询</el-button>
-          <el-button type="primary" @click="() => toInfo(null)" :icon="CirclePlus">新增</el-button>
+          <el-button type="primary" @click="() => toNormalInfo(null)" :icon="CirclePlus">新增普通任务</el-button>
+          <el-button type="primary" @click="() => toWorkflowInfo(null)" :icon="CirclePlus">新增工作流任务</el-button>
         </el-form-item>
       </el-form>
     </el-header>
@@ -87,8 +88,13 @@ const changeEnable = (planId: any, enable: any) => {
 }
 
 // 跳转到详情
-const toInfo = (planId: any) => {
-  router.push({path: '/plan/edit',
+const toNormalInfo = (planId: any) => {
+  router.push({path: '/normal-plan/edit',
+    query: {planId: planId}
+  })
+}
+const toWorkflowInfo = (planId: any) => {
+  router.push({path: '/workflow-plan/edit',
     query: {planId: planId}
   })
 }

@@ -19,6 +19,22 @@ const PlanType: LabelEnum[] = [
     {label: '工作流任务', value: 2}
 ];
 
+const JobType: LabelEnum[] = [
+    {label: '普通类型', value: 1},
+    {label: '广播类型', value: 2},
+    {label: 'Map任务', value: 3},
+    {label: 'MapReduce任务', value: 4},
+];
+
+const LoadBalanceType: LabelEnum[] = [
+    {label: '随机', value: 1},
+    {label: '轮询', value: 2},
+    {label: '指定节点', value: 3},
+    {label: '最不经常使用', value: 4},
+    {label: '最近最少使用', value: 4},
+    {label: '一致性hash', value: 4},
+];
+
 const TriggerType: Array<LabelEnum> = [
     {label: 'api触发', value: 1},
     {label: '调度触发', value: 2}
@@ -37,10 +53,19 @@ const CRONType: Array<LabelEnum> = [
     {label: 'SPRING', value: 'SPRING'},
 ];
 
+const RetryType: Array<LabelEnum> = [
+    {label: '重试所有', value: 2},
+    {label: '失败重试', value: 3},
+];
+
+
 
 export default {
     PlanType,
+    JobType,
+    LoadBalanceType,
     TriggerType,
     ScheduleType,
     CRONType,
+    RetryType,
 }
