@@ -10,22 +10,19 @@
           <el-input v-model="form.description"/>
         </el-form-item>
         <el-form-item label="触发方式">
-          <el-select v-model="form.triggerType" placeholder="请选择">
-            <el-option v-for="item in AppConstants.TriggerType" :key="item.value" :label="item.label"
-                       :value="item.value"></el-option>
-          </el-select>
+          <el-radio-group v-model="form.triggerType" class="ml-4">
+            <el-radio v-for="item in AppConstants.TriggerType" :label="item.value">{{item.label}}</el-radio>
+          </el-radio-group>
         </el-form-item>
 
         <!-- 调度相关 -->
         <ScheduleOptionComponent :option="form.scheduleOption" @onChange="receiveScheduleOptionChange"/>
 
         <!-- 普通任务 -->
-        <!-- 基础 -->
         <el-form-item label="任务类型">
-          <el-select v-model="form.type" placeholder="请选择">
-            <el-option v-for="item in AppConstants.JobType" :key="item.value" :label="item.label"
-                       :value="item.value"></el-option>
-          </el-select>
+          <el-radio-group v-model="form.type" class="ml-4">
+            <el-radio v-for="item in AppConstants.JobType" :label="item.value">{{item.label}}</el-radio>
+          </el-radio-group>
         </el-form-item>
         <el-form-item label="执行器名称">
           <el-input v-model="form.executorName"/>
@@ -45,11 +42,18 @@
 </template>
 
 <script setup lang="ts">
-import {ref, reactive} from 'vue'
+import {getCurrentInstance, ref} from 'vue'
 import AppConstants from '@/libs/utils/AppConstants';
 import ScheduleOptionComponent from '@/components/plan/ScheduleOptionComponent.vue'
 import RetryOptionComponent from '@/components/plan/RetryOptionComponent.vue'
 import DispatchOptionComponent from '@/components/plan/DispatchOptionComponent.vue'
+import {useRouter} from 'vue-router'
+import { ElMessage } from 'element-plus'
+
+const {proxy}: any = getCurrentInstance();
+
+const router = useRouter();
+const planId = router.currentRoute.value.query.planId;
 
 // todo @B 如何从子模块引入
 interface ScheduleOption {
@@ -60,11 +64,13 @@ interface ScheduleOption {
   scheduleCron?: string,
   scheduleCronType?: string
 }
+
 interface RetryOption {
   retry?: number,
   retryInterval?: number,
   retryType?: number
 }
+
 interface DispatchOption {
   loadBalanceType?: number,
   cpuRequirement?: number,
@@ -72,26 +78,23 @@ interface DispatchOption {
   tagFilters?: string,
 }
 
-const scheduleOptionVal:ScheduleOption = {
-  scheduleType: 1 // todo @B 为什么无效
+const scheduleOptionVal: ScheduleOption = {
+  scheduleType: 1 // todo @B 为什么没传递进去
 }
 
-const retryOptionVal:RetryOption = {}
+const retryOptionVal: RetryOption = {}
+const dispatchOptionVal: DispatchOption = {}
 
-const dispatchOptionVal:DispatchOption = {}
-
-// do not use same name with ref
 const form = ref({
   name: '',
   description: '',
   triggerType: null,
-  executorName: null,
   scheduleOption: scheduleOptionVal,
   retryOption: retryOptionVal,
   dispatchOption: dispatchOptionVal
 })
 
-const receiveScheduleOptionChange = (val:ScheduleOption)=>{
+const receiveScheduleOptionChange = (val: ScheduleOption) => {
   form.value.scheduleOption = val
 }
 const receiveRetryOptionChange = (val:RetryOption)=>{
@@ -102,7 +105,39 @@ const receiveDispatchOptionChange = (val:DispatchOption)=>{
 }
 
 const onSubmit = () => {
-  console.log(form)
+  console.log(form.value)
+  const planParam = form.value;
+  console.log(planParam)
+  // 根据id判断更新还是新增
+  if (planId) {
+    proxy.$request.post(`/api/v1/plan/update?${planId}`, planParam).then((response: any) => {
+      ElMessage({
+        message: '操作成功',
+        type: 'success',
+      })
+    }).catch((reject: any) => {
+      ElMessage({
+        showClose: true,
+        message: reject.message,
+        type: 'error',
+        duration: 3000
+      })
+    })
+  } else {
+    proxy.$request.post(`/api/v1/plan/add`, planParam).then((response: any) => {
+      ElMessage({
+        message: '操作成功',
+        type: 'success',
+      })
+    }).catch((reject: any) => {
+      ElMessage({
+        showClose: true,
+        message: reject.message,
+        type: 'error',
+        duration: 3000
+      })
+    })
+  }
 }
 </script>
 
