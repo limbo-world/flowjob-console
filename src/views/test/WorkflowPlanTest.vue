@@ -6,7 +6,7 @@
 
 import WorkflowPlan from '@/components/workflow/WorkflowPlan.vue';
 import { PlanDTO } from "@/types/swagger-ts-api";
-import { PlanType } from "@/types/swagger-ts-enums";
+import { PlanType } from "@/types/console-enums";
 
 const plan: PlanDTO = {
     planId: 'xxxxxx',
