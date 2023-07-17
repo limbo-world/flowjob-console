@@ -12,6 +12,7 @@
     "@antv/x6": "2.2.1",
     "@antv/x6-plugin-selection": "2.1.5",
     "@antv/x6-vue-shape": "2.0.9",
+    "@dagrejs/dagre": "^1.0.2",
     "@element-plus/icons-vue": "^2.0.10",
     "@types/lodash": "^4.14.191",
     "@types/node": "^18.11.18",
