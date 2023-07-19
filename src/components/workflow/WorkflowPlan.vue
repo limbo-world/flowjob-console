@@ -1,15 +1,23 @@
 <template>
-    <div :id="x6ContainerId" class="workflow-x6-container">
+
+
+    <div class="workerflow-plan-dag">
+        <div :id="x6ContainerId" class="workflow-x6-container">
+        </div>
+
+        <graph-context-menu ref="contextMenu" :menus="contextMenuData"></graph-context-menu>
     </div>
 </template>
 
 
 <script setup lang="ts">
 import { computed, onMounted, Ref, ref, toRef } from "vue";
-import { PlanDTO, WorkflowJobDTO } from "@/types/swagger-ts-api";
-import { useX6Graph, autoLayout } from "@/components/workflow/X6GraphIntergration";
 import { Cell, Graph } from "@antv/x6";
 import { Node } from "@antv/x6/lib/model";
+import { PlanDTO, WorkflowJobDTO } from "@/types/swagger-ts-api";
+import { useX6Graph, autoLayout } from "@/components/workflow/X6GraphIntergration";
+import { useGraphContextMenu } from "@/components/workflow/GraphContextMenuIntergration";
+import GraphContextMenu from "@/components/workflow/GraphContextMenu.vue"
 
 
 const props = defineProps<{
@@ -19,6 +27,8 @@ const props = defineProps<{
 const plan: Ref<PlanDTO> = toRef(props, 'plan');
 const x6ContainerId = computed<string>(() => 'x6Container_' + plan.value?.planId);
 const { x6Graph } = useX6Graph(x6ContainerId.value);
+const contextMenu = ref();
+const { contextMenuData } = useGraphContextMenu(x6Graph, contextMenu);
 
 onMounted(() => {
     // 初始化作业节点
@@ -35,13 +45,14 @@ onMounted(() => {
             "y": 110,
             "data": {
                 "label": job.name,
-                "status": "success"
+                "status": "running"
             },
             "ports": [ ]
         };
         jobNodeMetas.push(jobNodeMeta);
         jobNodeMetaMap.set(job.id, jobNodeMeta);
     });
+
     // 再生成连线，遍历所有节点
     plan.value?.workflow?.forEach((job: WorkflowJobDTO) => {
         // 没有子节点，则无需生成连线
@@ -88,17 +99,17 @@ onMounted(() => {
         });
     });
 
-    console.log('nodes: ', jobNodeMetas);
-    console.log('edges: ', jobEdgeMetas);
-
     // 生成 x6 流程图的 Cell 元素，并重绘 x6 组件
     const cells: Cell[] = [];
     jobNodeMetas.forEach(m => cells.push(x6Graph.value?.createNode(m) as Cell));
     jobEdgeMetas.forEach(m => cells.push(x6Graph.value?.createEdge(m) as Cell));
     x6Graph.value?.resetCells(cells);
 
+    // 自适应布局
     autoLayout(x6Graph?.value as Graph, 'TB');  
     (x6Graph?.value as Graph).centerContent();
+
+
 
 })
 
@@ -106,6 +117,12 @@ onMounted(() => {
 
 
 <style scoped lang="scss">
+
+.workerflow-plan-dag {
+    position: relative;
+    height: 100%;
+}
+
 .workflow-x6-container {
     width: 100%;
     height: 100%;

@@ -1,5 +1,5 @@
 <template>
-<div class="node default">
+<div class="node running">
     <img :src="logoPath" />
     <span class="label">{{ nodeStatus.label }}</span>
     <span class="status">
