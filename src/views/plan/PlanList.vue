@@ -18,6 +18,11 @@
         <el-table-column prop="planId" label="ID" width="100"></el-table-column>
         <el-table-column prop="name" label="名称"></el-table-column>
         <el-table-column prop="description" label="描述"></el-table-column>
+        <el-table-column label="调度配置">
+          <template #default="scope">
+            {{AppConstants.ScheduleType.getByValue(scope.row.scheduleType).label}}
+          </template>
+        </el-table-column>
         <el-table-column label="是否启用" width="100">
           <template #default="scope">
             <el-switch v-model="scope.row.enabled"
@@ -50,6 +55,7 @@
 import {Edit, CirclePlus, Search} from '@element-plus/icons-vue'
 import {getCurrentInstance, ref, reactive} from "vue";
 import { useRouter } from 'vue-router'
+import AppConstants from '@/libs/utils/AppConstants';
 
 const {proxy}: any = getCurrentInstance();
 

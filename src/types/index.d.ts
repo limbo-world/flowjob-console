@@ -24,7 +24,8 @@ interface NodeStatus {
     label?: string
 }
 
-interface LabelEnum {
-    label: string;
-    value: any;
+interface Label {
+    key: string; // 唯一键
+    label: string; // 展示文本
+    value: any; // 具体值
 }

@@ -7,7 +7,7 @@
     </el-form-item>
     <el-form-item label="调度方式">
       <el-radio-group v-model="option.scheduleType" class="ml-4" @change="onChange">
-        <el-radio v-for="item in AppConstants.ScheduleType" :label="item.value">{{item.label}}</el-radio>
+        <el-radio v-for="item in AppConstants.ScheduleType.getArr()" :label="item.value">{{item.label}}</el-radio>
       </el-radio-group>
     </el-form-item>
 
@@ -19,7 +19,7 @@
     <template v-if="option.scheduleType === 3">
       <el-form-item label="CRON表达式类型">
         <el-radio-group v-model="option.scheduleCronType" class="ml-4" @change="onChange">
-          <el-radio v-for="item in AppConstants.CRONType" :label="item.value">{{item.label}}</el-radio>
+          <el-radio v-for="item in AppConstants.CRONType.getArr()" :label="item.value">{{item.label}}</el-radio>
         </el-radio-group>
       </el-form-item>
       <el-form-item label="CRON表达式">

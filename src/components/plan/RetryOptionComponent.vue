@@ -7,7 +7,7 @@
   </el-form-item>
   <el-form-item label="重试方式" v-if="jobType != null && jobType !== 1">
     <el-radio-group v-model="option.retryType" class="ml-4" @change="onChange">
-      <el-radio v-for="item in AppConstants.RetryType" :label="item.value">{{item.label}}</el-radio>
+      <el-radio v-for="item in AppConstants.RetryType.getArr()" :label="item.value">{{item.label}}</el-radio>
     </el-radio-group>
   </el-form-item>
 </template>

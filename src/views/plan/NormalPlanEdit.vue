@@ -11,7 +11,7 @@
         </el-form-item>
         <el-form-item label="触发方式">
           <el-radio-group v-model="form.triggerType" class="ml-4">
-            <el-radio v-for="item in AppConstants.TriggerType" :label="item.value">{{item.label}}</el-radio>
+            <el-radio v-for="item in AppConstants.TriggerType.getArr()" :label="item.value">{{item.label}}</el-radio>
           </el-radio-group>
         </el-form-item>
 
@@ -21,7 +21,7 @@
         <!-- 普通任务 -->
         <el-form-item label="任务类型">
           <el-radio-group v-model="form.type" class="ml-4">
-            <el-radio v-for="item in AppConstants.JobType" :label="item.value">{{item.label}}</el-radio>
+            <el-radio v-for="item in AppConstants.JobType.getArr()" :label="item.value">{{item.label}}</el-radio>
           </el-radio-group>
         </el-form-item>
         <el-form-item label="执行器名称">
