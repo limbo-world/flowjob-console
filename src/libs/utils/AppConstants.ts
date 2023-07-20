@@ -87,6 +87,12 @@ const RetryType: LabelEnum = new LabelEnum([
     {key: "ONLY_FAIL_PART", label: '失败重试', value: 3},
 ] as Array<Label>);
 
+const WorkerStatus: LabelEnum = new LabelEnum([
+    {key: "RUNNING", label: '运行中', value: 1},
+    {key: "FUSING", label: '熔断中', value: 2},
+    {key: "TERMINATED", label: '已停止', value: 3},
+] as Array<Label>);
+
 const getArray = (obj: any) => {
     const arr: Array<Label> = [];
     Object.values(obj).forEach(val => {
@@ -113,6 +119,7 @@ export default {
     ScheduleType,
     CRONType,
     RetryType,
+    WorkerStatus,
     getLabel,
     getArray,
 }

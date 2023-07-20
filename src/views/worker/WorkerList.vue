@@ -21,10 +21,9 @@
             {{ scope.row.host + ":" + scope.row.port }}
           </template>
         </el-table-column>
-        <el-table-column prop="status" label="状态"></el-table-column>
-        <el-table-column label="是否启用" width="100">
+        <el-table-column prop="status" label="状态">
           <template #default="scope">
-            {{ scope.row.enabled ? "已启用" : "未启用" }}
+            {{AppConstants.WorkerStatus.getByValue(scope.row.status).label}}
           </template>
         </el-table-column>
       </el-table>
@@ -43,6 +42,7 @@
 <script setup lang="ts">
 import {Edit, CirclePlus, Search} from '@element-plus/icons-vue'
 import {getCurrentInstance, ref, reactive} from "vue";
+import AppConstants from '@/libs/utils/AppConstants';
 
 const {proxy}: any = getCurrentInstance();
 
