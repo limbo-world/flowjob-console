@@ -41,7 +41,15 @@ export default [
             {
                 path: '/test/d1',
                 component: () => import("@/views/test/DagDemo.vue"),
-            }
+            },
+            {
+                path: '/test/workflow-demo',
+                component: () => import("@/views/test/DagDemo1.vue"),
+            },
+            {
+                path: '/test/workflow-test',
+                component: () => import("@/views/test/WorkflowPlanTest.vue"),
+            },
         ]
     }
 ] as Array<RouteRecordRaw>;
