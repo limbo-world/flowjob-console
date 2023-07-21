@@ -1,5 +1,5 @@
 <template>
-    <workflow-plan :plan="plan"></workflow-plan>
+    <workflow-plan ref="workflowPlanComponent"></workflow-plan>
 </template>
 
 <script lang="ts" setup>
@@ -7,6 +7,7 @@
 import WorkflowPlan from '@/components/workflow/WorkflowPlan.vue';
 import { PlanDTO } from "@/types/swagger-ts-api";
 import { PlanType } from "@/types/console-enums";
+import { onMounted, Ref, ref } from 'vue';
 
 const plan: PlanDTO = {
     planId: 'xxxxxx',
@@ -128,7 +129,15 @@ const plan: PlanDTO = {
         }
     ],
     currentVersion: '1',
-    recentlyVersion: '2'
+    recentlyVersion: '2',
+    dagData: {
+        nodes: new Map(),
+        edges: new Map()
+    }
 }
+
+const workflowPlanComponent = ref();
+
+onMounted(() => workflowPlanComponent.value.updatePlan(plan));    
 
 </script>

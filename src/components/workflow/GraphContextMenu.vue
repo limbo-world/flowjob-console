@@ -9,20 +9,6 @@
             </el-icon>
             <span class="menu-name">{{ menu.menuName }}</span>
         </div>
-<!--         
-        <div class="context-menu-item">
-            <el-icon class="menu-icon"><CirclePlusFilled /></el-icon>
-            <span class="menu-name">新增节点</span>
-        </div>
-        <div class="context-menu-item">
-            <el-icon class="menu-icon"><Aim /></el-icon>
-            <span class="menu-name">居中</span>
-        </div>
-
-        <div class="context-menu-item">
-            <el-icon class="menu-icon"><Grid /></el-icon>
-            <span class="menu-name">自适应布局</span>
-        </div> -->
     </div>
 </template>
 
@@ -62,10 +48,15 @@ const visible = ref(false);
 // 菜单项
 const menus = toRef(props, 'menus');
 
-// 坐标
+// 坐标，在页面视图中的坐标
 const position = ref({
     x: 0, y: 0
 })
+
+// 坐标，在 Graph 中的坐标
+const positionInGraph = ref({
+    x: 0, y: 0
+});
 
 /**
  * 设置菜单是否可见
@@ -75,17 +66,31 @@ function setVisible(v: boolean) {
 }
 
 /**
- * 更新坐标
+ * 更新坐标，在页面视图中的坐标
  */ 
 function setPosition(pos: {x: number, y: number}) {
     position.value = { ...pos }
 }
 
 /**
- * 获取坐标
+ * 获取坐标，在页面视图中的坐标
  */
 function getPosition() {
     return { ...position.value }
+}
+
+/**
+ * 更新坐标，在 Graph 中的坐标
+ */ 
+function setPositionInGraph(pos: {x: number, y: number}) {
+    positionInGraph.value = { ...pos }
+}
+
+/**
+ * 获取坐标，在 Graph 中的坐标
+ */
+function getPositionInGraph() {
+    return { ...positionInGraph.value }
 }
 
 // 计算样式
@@ -101,6 +106,8 @@ defineExpose({
     setVisible,
     getPosition,
     setPosition,
+    getPositionInGraph,
+    setPositionInGraph,
 });
 
 </script>
@@ -123,6 +130,12 @@ defineExpose({
 
         &:hover {
             background-color: #ecf5ff;
+        }
+        &:hover:first-child {
+            border-radius: 6px 6px 0 0;
+        }
+        &:hover:last-child {
+            border-radius: 0 0 6px 6px;
         }
     }
     .menu-name {

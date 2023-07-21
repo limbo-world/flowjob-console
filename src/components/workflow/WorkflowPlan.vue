@@ -5,114 +5,71 @@
         <div :id="x6ContainerId" class="workflow-x6-container">
         </div>
 
-        <graph-context-menu ref="contextMenu" :menus="contextMenuData"></graph-context-menu>
+        <graph-context-menu ref="contextMenuRef" :menus="contextMenuData"></graph-context-menu>
     </div>
 </template>
 
 
 <script setup lang="ts">
-import { computed, onMounted, Ref, ref, toRef } from "vue";
-import { Cell, Graph } from "@antv/x6";
-import { Node } from "@antv/x6/lib/model";
-import { PlanDTO, WorkflowJobDTO } from "@/types/swagger-ts-api";
-import { useX6Graph, autoLayout } from "@/components/workflow/X6GraphIntergration";
+import { computed, Ref, ref } from "vue";
+import { Graph } from "@antv/x6";
+import { PlanDagData, PlanDTO, WorkflowJobDTO } from "@/types/swagger-ts-api";
+import { useX6Graph, autoLayout, refreshDAGJobNodes } from "@/components/workflow/X6GraphIntergration";
 import { useGraphContextMenu } from "@/components/workflow/GraphContextMenuIntergration";
-import GraphContextMenu from "@/components/workflow/GraphContextMenu.vue"
+import GraphContextMenu from "./GraphContextMenu.vue"
 
 
-const props = defineProps<{
-    plan: PlanDTO
-}>();
-
-const plan: Ref<PlanDTO> = toRef(props, 'plan');
+const plan: Ref<PlanDTO | undefined> = ref();
 const x6ContainerId = computed<string>(() => 'x6Container_' + plan.value?.planId);
-const { x6Graph } = useX6Graph(x6ContainerId.value);
-const contextMenu = ref();
-const { contextMenuData } = useGraphContextMenu(x6Graph, contextMenu);
+const { x6GraphRef } = useX6Graph(x6ContainerId.value);
+const contextMenuRef = ref();
+const { contextMenuData } = useGraphContextMenu({
+    x6GraphRef, 
+    contextMenuRef, 
+    planRef: plan, 
+    refreshPlanDAG: (jobs: WorkflowJobDTO[]) => refreshDAGJobNodes(
+        x6GraphRef.value as Graph,
+        plan?.value?.dagData as PlanDagData,
+        jobs
+    )
+});
 
-onMounted(() => {
-    // 初始化作业节点
-    const jobNodeMetas: Node.Metadata[] = [];
-    const jobNodeMetaMap: Map<String, Node.Metadata> = new Map();
-    const jobEdgeMetas: Node.Metadata[] = [];
 
-    // 先生成节点
-    plan.value?.workflow?.forEach((job: WorkflowJobDTO) => {
-        const jobNodeMeta = {
-            "id": job.id,
-            "shape": "dag-node",
-            "x": 290,
-            "y": 110,
-            "data": {
-                "label": job.name,
-                "status": "running"
-            },
-            "ports": [ ]
-        };
-        jobNodeMetas.push(jobNodeMeta);
-        jobNodeMetaMap.set(job.id, jobNodeMeta);
-    });
+/**
+ * 更新任务
+ */
+function updatePlan(p: PlanDTO) {
+    // 为数据赋值
+    plan.value = p;
 
-    // 再生成连线，遍历所有节点
-    plan.value?.workflow?.forEach((job: WorkflowJobDTO) => {
-        // 没有子节点，则无需生成连线
-        if (job?.children?.length && job?.children?.length <= 0) {
-            return;
-        }
-
-        // 找到节点元信息
-        let jobNodeMeta = jobNodeMetaMap.get(job.id);
-        if (!jobNodeMeta) {
-            return;
-        }
-
-        // 遍历子节点，生成连线、添加 ports
-        job.children?.forEach((childJobId: string) => {
-            // 找到子节点元信息
-            const childJobNodeMeta = jobNodeMetaMap.get(childJobId);
-
-            // 添加父、子节点 ports
-            const edgeId = `${job.id}-${childJobId}`;
-            jobNodeMeta?.ports?.push({
-                id: edgeId,
-                group: 'bottom' // 左右布局，所以父节点 port 分组在右侧
-            });
-            childJobNodeMeta?.ports?.push({
-                id: edgeId,
-                group: 'top' // 左右布局，所以子节点 port 分组在左侧
-            });
-
-            // 添加连线
-            jobEdgeMetas.push({
-                "id": edgeId,
-                "shape": "dag-edge",
-                "source": {
-                    "cell": job?.id,
-                    "port": edgeId
-                },
-                "target": {
-                    "cell": childJobId,
-                    "port": edgeId
-                },
-                "zIndex": 0
-            });
-        });
-    });
-
-    // 生成 x6 流程图的 Cell 元素，并重绘 x6 组件
-    const cells: Cell[] = [];
-    jobNodeMetas.forEach(m => cells.push(x6Graph.value?.createNode(m) as Cell));
-    jobEdgeMetas.forEach(m => cells.push(x6Graph.value?.createEdge(m) as Cell));
-    x6Graph.value?.resetCells(cells);
+    // 刷新 DAG
+    refreshDAGJobNodes(
+        x6GraphRef.value as Graph,
+        plan.value.dagData as PlanDagData,
+        plan.value.workflow as WorkflowJobDTO[]
+    );
 
     // 自适应布局
-    autoLayout(x6Graph?.value as Graph, 'TB');  
-    (x6Graph?.value as Graph).centerContent();
+    autoLayout(x6GraphRef?.value as Graph, plan, 'TB');  
+    (x6GraphRef?.value as Graph)?.centerContent();
+
+    console.log(plan)
+}
 
 
+/**
+ * 获取任务
+ */
+function getPlan(): PlanDTO {
+    return plan.value as PlanDTO;
+}
 
+
+// 组件对外暴露的函数
+defineExpose({
+    updatePlan,
+    getPlan
 })
-
 </script>
 
 

@@ -625,6 +625,21 @@ export interface PlanDTO {
   workflow?: WorkflowJobDTO[];
   currentVersion?: string;
   recentlyVersion?: string;
+
+  dagData: PlanDagData;
+}
+
+
+export interface PlanDagData {
+  nodes: Map<string, PlanDagNodeData>
+  edges: Map<string, object>
+}
+
+export interface PlanDagNodeData {
+  x: number;
+  y: number;
+  w: number;
+  h: number;
 }
 
 /** 请求响应封装 */
