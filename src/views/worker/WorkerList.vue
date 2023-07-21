@@ -32,6 +32,14 @@
             </el-tag>
           </template>
         </el-table-column>
+        <el-table-column label="是否启用" width="100">
+          <template #default="scope">
+            <el-switch v-model="scope.row.enabled"
+                       @change="v => {changeEnable(scope.row.workerId, v)}"
+                       active-color="#13ce66"
+                       inactive-color="#ff4949"></el-switch>
+          </template>
+        </el-table-column>
       </el-table>
     </el-main>
 
@@ -67,6 +75,20 @@ const loadWorkers = () => {
     workers.value = page.data;
     queryForm.total = page.total;
   });
+}
+
+// 切换开关
+const changeEnable = (workerId: any, enable: any) => {
+  console.log(workerId, enable)
+  if (enable) {
+    proxy.$request.post(`/api/v1/worker/start?workerId=${workerId}`).then((response: any) => {
+      loadWorkers();
+    })
+  } else {
+    proxy.$request.post(`/api/v1/worker/stop?workerId=${workerId}`).then((response: any) => {
+      loadWorkers();
+    })
+  }
 }
 
 // 初始化
