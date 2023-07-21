@@ -13,7 +13,7 @@
 
     <el-main>
       <el-table :data="workers">
-        <el-table-column prop="workerId" label="ID" width="100"></el-table-column>
+        <el-table-column prop="workerId" label="ID"></el-table-column>
         <el-table-column prop="name" label="名称"></el-table-column>
         <el-table-column prop="protocol" label="通信协议"></el-table-column>
         <el-table-column label="地址">
@@ -21,9 +21,15 @@
             {{ scope.row.host + ":" + scope.row.port }}
           </template>
         </el-table-column>
-        <el-table-column prop="status" label="状态">
+        <el-table-column label="状态">
           <template #default="scope">
             {{AppConstants.WorkerStatus.getByValue(scope.row.status).label}}
+          </template>
+        </el-table-column>
+        <el-table-column label="标签">
+          <template #default="scope">
+            <el-tag v-for="(property, idx) in scope.row.tags" :key="property" type="success">{{property.key + ":" + property.value}}
+            </el-tag>
           </template>
         </el-table-column>
       </el-table>
