@@ -83,11 +83,11 @@ const loadPlans = () => {
 const changeEnable = (planId: any, enable: any) => {
   console.log(planId, enable)
   if (enable) {
-    proxy.$request.put(`/api/v1/plan/${planId}/start`).then((response: any) => {
+    proxy.$request.post(`/api/v1/plan/start?planId=${planId}`).then((response: any) => {
       loadPlans();
     })
   } else {
-    proxy.$request.put(`/api/v1/plan/${planId}/stop`).then((response: any) => {
+    proxy.$request.post(`/api/v1/plan/stop?planId=${planId}`).then((response: any) => {
       loadPlans();
     })
   }
