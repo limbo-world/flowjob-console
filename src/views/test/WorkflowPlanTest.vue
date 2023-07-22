@@ -6,14 +6,14 @@
 
 import WorkflowPlan from '@/components/workflow/WorkflowPlan.vue';
 import { PlanDTO } from "@/types/swagger-ts-api";
-import { PlanType } from "@/types/console-enums";
+import { PlanTypeEnum } from "@/types/console-enums";
 import { onMounted, Ref, ref } from 'vue';
 
 const plan: PlanDTO = {
     planId: 'xxxxxx',
     name: 'Mock 测试的任务',
     description: 'Mock 测试的任务描述',
-    planType: PlanType.WORKFLOW,
+    planType: PlanTypeEnum.WORKFLOW.value,
     triggerType: 1,
     scheduleOption: {
         scheduleType: 1
@@ -138,6 +138,6 @@ const plan: PlanDTO = {
 
 const workflowPlanComponent = ref();
 
-onMounted(() => workflowPlanComponent.value.updatePlan(plan));    
+onMounted(() => workflowPlanComponent.value.updatePlan(plan));
 
 </script>

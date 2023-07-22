@@ -23,7 +23,7 @@
         </el-table-column>
         <el-table-column label="状态">
           <template #default="scope">
-            {{AppConstants.WorkerStatus.getByValue(scope.row.status).label}}
+            {{WorkerStatusEnum.getByValue(scope.row.status).label}}
           </template>
         </el-table-column>
         <el-table-column label="标签">
@@ -56,7 +56,7 @@
 <script setup lang="ts">
 import {Edit, CirclePlus, Search} from '@element-plus/icons-vue'
 import {getCurrentInstance, ref, reactive} from "vue";
-import AppConstants from '@/libs/utils/AppConstants';
+import {WorkerStatusEnum} from '@/types/console-enums';
 
 const {proxy}: any = getCurrentInstance();
 

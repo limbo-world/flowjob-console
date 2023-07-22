@@ -2,13 +2,13 @@
 import { ComponentPublicInstance, onMounted, Ref, toRefs } from "vue";
 import { Graph } from "@antv/x6";
 import { PlanDTO, WorkflowJobDTO } from "@/types/swagger-ts-api";
-import { JobType, LoadBalanceType, TriggerType } from "@/types/console-enums";
+import { JobTypeEnum, LoadBalanceTypeEnum, TriggerTypeEnum } from "@/types/console-enums";
 import { autoLayout, generateNodesAndEdges } from "./X6GraphIntergration";
 import GraphContextMenu from "./GraphContextMenu.vue"
 
 
 export function useGraphContextMenu(params: {
-    x6GraphRef: Ref<Graph | undefined>, 
+    x6GraphRef: Ref<Graph | undefined>,
     contextMenuRef: Ref<ComponentPublicInstance<typeof GraphContextMenu>>,
     planRef: Ref<PlanDTO | undefined>,
     refreshPlanDAG: (jobs: WorkflowJobDTO[]) => void
@@ -93,14 +93,14 @@ export function useGraphContextMenu(params: {
 function addEmptyNode(plan: PlanDTO, postion: { x: number, y: number}) {
     const id = Date.now() + '';
     const job = {
-        type: JobType.NORMAL,
+        type: JobTypeEnum.NORMAL,
         attributes: {},
         retryOption: {
             retry: 0,
             retryInterval: 0
         },
         dispatchOption: {
-            loadBalanceType: LoadBalanceType.ROUND_ROBIN,
+            loadBalanceType: LoadBalanceTypeEnum.ROUND_ROBIN,
             cpuRequirement: -1,
             ramRequirement: -1,
             tagFilters: []
@@ -110,7 +110,7 @@ function addEmptyNode(plan: PlanDTO, postion: { x: number, y: number}) {
         name: '空白作业',
         description: '',
         children: [],
-        triggerType: TriggerType.SCHEDULE,
+        triggerType: TriggerTypeEnum.SCHEDULE,
         continueWhenFail: false,
     };
 

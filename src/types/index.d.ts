@@ -25,7 +25,7 @@ interface NodeStatus {
 }
 
 interface Label {
-    key: string; // 唯一键
+    key?: string; // 唯一键
     label: string; // 展示文本
     value: any; // 具体值
 }

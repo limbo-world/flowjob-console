@@ -11,7 +11,7 @@
         </el-form-item>
         <el-form-item label="触发方式">
           <el-radio-group v-model="form.triggerType" class="ml-4">
-            <el-radio v-for="item in AppConstants.TriggerType.getArr()" :label="item.value">{{item.label}}</el-radio>
+            <el-radio v-for="item in TriggerTypeEnum.getArr()" :label="item.value">{{item.label}}</el-radio>
           </el-radio-group>
         </el-form-item>
 
@@ -21,7 +21,7 @@
         <!-- 普通任务 -->
         <el-form-item label="任务类型">
           <el-radio-group v-model="form.type" class="ml-4">
-            <el-radio v-for="item in AppConstants.JobType.getArr()" :label="item.value">{{item.label}}</el-radio>
+            <el-radio v-for="item in JobTypeEnum.getArr()" :label="item.value">{{item.label}}</el-radio>
           </el-radio-group>
         </el-form-item>
         <el-form-item label="执行器名称">
@@ -43,7 +43,7 @@
 
 <script setup lang="ts">
 import {getCurrentInstance, ref} from 'vue'
-import AppConstants from '@/libs/utils/AppConstants';
+import {JobTypeEnum, TriggerTypeEnum} from '@/types/console-enums'
 import ScheduleOptionComponent from '@/components/plan/ScheduleOptionComponent.vue'
 import RetryOptionComponent from '@/components/plan/RetryOptionComponent.vue'
 import DispatchOptionComponent from '@/components/plan/DispatchOptionComponent.vue'
@@ -93,6 +93,18 @@ const form = ref({
   retryOption: retryOptionVal,
   dispatchOption: dispatchOptionVal
 })
+
+// 加载列表
+const loadPlan = () => {
+  if (planId == null) {
+    return;
+  }
+  proxy.$request.get(`/api/v1/plan/get`, {params: {planId: planId}}).then((response: any) => {
+    form.value = response.data;
+  });
+}
+
+loadPlan();
 
 const receiveScheduleOptionChange = (val: ScheduleOption) => {
   form.value.scheduleOption = val

@@ -7,19 +7,19 @@
     </el-form-item>
     <el-form-item label="调度方式">
       <el-radio-group v-model="option.scheduleType" class="ml-4" @change="onChange">
-        <el-radio v-for="item in AppConstants.ScheduleType.getArr()" :label="item.value">{{item.label}}</el-radio>
+        <el-radio v-for="item in ScheduleTypeEnum.getArr()" :label="item.value">{{item.label}}</el-radio>
       </el-radio-group>
     </el-form-item>
 
-    <template v-if="option.scheduleType === 1 || option.scheduleType === 2">
+    <template v-if="ScheduleTypeEnum.FIXED_RATE.value === option.scheduleType || ScheduleTypeEnum.FIXED_DELAY.value === option.scheduleType">
       <el-form-item label="调度间隔">
         <el-input-number v-model="option.scheduleInterval" :min="0" controls-position="right" @change="onChange"/>
       </el-form-item>
     </template>
-    <template v-if="option.scheduleType === 3">
+    <template v-if="ScheduleTypeEnum.CRON.value === option.scheduleType">
       <el-form-item label="CRON表达式类型">
         <el-radio-group v-model="option.scheduleCronType" class="ml-4" @change="onChange">
-          <el-radio v-for="item in AppConstants.CRONType.getArr()" :label="item.value">{{item.label}}</el-radio>
+          <el-radio v-for="item in CRONTypeEnum.getArr()" :label="item.value">{{item.label}}</el-radio>
         </el-radio-group>
       </el-form-item>
       <el-form-item label="CRON表达式">
@@ -30,8 +30,8 @@
 
 <script setup lang="ts">
 // 参考 https://blog.csdn.net/Miketutu/article/details/130686380
-import AppConstants from '@/libs/utils/AppConstants';
-import {ref} from "vue";
+import {CRONTypeEnum, ScheduleTypeEnum} from '@/types/console-enums';
+import {ref, toRef} from "vue";
 
 interface ScheduleOption {
   scheduleType?: number,
@@ -42,9 +42,10 @@ interface ScheduleOption {
   scheduleCronType?: string
 }
 
-defineProps<{option:ScheduleOption}>()
+const props = defineProps<{option:ScheduleOption}>()
 
-let option = ref<ScheduleOption>({})
+// let option = ref<ScheduleOption>({})
+let option = toRef(props, "option")
 
 const emit = defineEmits<{(e:'onChange',val:ScheduleOption):void}>()
 

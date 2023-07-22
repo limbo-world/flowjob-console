@@ -7,8 +7,8 @@
         </el-form-item>
         <el-form-item>
           <el-button type="primary" @click="loadPlans" :icon="Search">查询</el-button>
-          <el-button type="primary" @click="() => toNormalInfo(null)" :icon="CirclePlus">新增普通任务</el-button>
-          <el-button type="primary" @click="() => toWorkflowInfo(null)" :icon="CirclePlus">新增工作流任务</el-button>
+          <el-button type="primary" @click="() => toPlanInfo(null, PlanTypeEnum.NORMAL.value, true)" :icon="CirclePlus">新增普通任务</el-button>
+          <el-button type="primary" @click="() => toPlanInfo(null, PlanTypeEnum.WORKFLOW.value, true)" :icon="CirclePlus">新增工作流任务</el-button>
         </el-form-item>
       </el-form>
     </el-header>
@@ -18,9 +18,14 @@
         <el-table-column prop="planId" label="ID" width="100"></el-table-column>
         <el-table-column prop="name" label="名称"></el-table-column>
         <el-table-column prop="description" label="描述"></el-table-column>
+        <el-table-column label="类型">
+          <template #default="scope">
+            {{ PlanTypeEnum.getByValue(scope.row.planType).label }}
+          </template>
+        </el-table-column>
         <el-table-column label="调度配置">
           <template #default="scope">
-            {{AppConstants.ScheduleType.getByValue(scope.row.scheduleType).label}}
+            {{ ScheduleTypeEnum.getByValue(scope.row.scheduleType).label }}
           </template>
         </el-table-column>
         <el-table-column label="是否启用" width="100">
@@ -33,9 +38,8 @@
         </el-table-column>
         <el-table-column label="操作" width="200">
           <template #default="scope">
-            <el-button link type="primary" @click="toInfo(scope.row.planId)">查看</el-button>
-            <el-button link type="primary" @click="toInfo(scope.row.planId)">编辑</el-button>
-            <el-button link type="primary" @click="toInfo(scope.row.planId)">删除</el-button>
+            <el-button link type="primary" @click="toPlanInfo(scope.row.planId, scope.row.planType, false)">查看</el-button>
+            <el-button link type="primary" @click="toPlanInfo(scope.row.planId, scope.row.planType, true)">编辑</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -52,10 +56,10 @@
 </template>
 
 <script setup lang="ts">
-import {Edit, CirclePlus, Search} from '@element-plus/icons-vue'
-import {getCurrentInstance, ref, reactive} from "vue";
-import { useRouter } from 'vue-router'
-import AppConstants from '@/libs/utils/AppConstants';
+import {CirclePlus, Search} from '@element-plus/icons-vue'
+import {getCurrentInstance, reactive, ref} from "vue";
+import {useRouter} from 'vue-router'
+import {PlanTypeEnum, ScheduleTypeEnum} from '@/types/console-enums';
 
 const {proxy}: any = getCurrentInstance();
 
@@ -72,7 +76,7 @@ let plans = ref([])
 
 // 加载列表
 const loadPlans = () => {
-  proxy.$request.get(`/api/v1/plan`, {params: queryForm}).then((response: any) => {
+  proxy.$request.get(`/api/v1/plan/page`, {params: queryForm}).then((response: any) => {
     let page = response.data
     plans.value = page.data;
     queryForm.total = page.total;
@@ -94,15 +98,16 @@ const changeEnable = (planId: any, enable: any) => {
 }
 
 // 跳转到详情
-const toNormalInfo = (planId: any) => {
-  router.push({path: '/normal-plan/edit',
-    query: {planId: planId}
-  })
-}
-const toWorkflowInfo = (planId: any) => {
-  router.push({path: '/workflow-plan/edit',
-    query: {planId: planId}
-  })
+const toPlanInfo = (planId: string, planType: number, edit: any) => {
+  if (PlanTypeEnum.NORMAL.value === planType) {
+    router.push({path: '/normal-plan/edit',
+      query: {planId: planId, edit: edit}
+    })
+  } else if (PlanTypeEnum.WORKFLOW.value === planType) {
+    router.push({path: '/workflow-plan/edit',
+      query: {planId: planId}
+    })
+  }
 }
 
 // 初始化
