@@ -86,7 +86,7 @@ interface DispatchOption {
 }
 
 const scheduleOptionVal: ScheduleOption = {
-  scheduleType: 1 // todo @B 为什么没传递进去
+  scheduleDelay: 0
 }
 
 const retryOptionVal: RetryOption = {}

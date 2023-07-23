@@ -47,8 +47,8 @@
 
     <el-footer>
       <el-pagination background layout="total, prev, pager, next" :total="queryForm.total"
-                     :current-page.sync="queryForm.current"
-                     :page-size="queryForm.size" @current-change="loadPlans">
+                     :current-page="queryForm.current"
+                     :page-size="queryForm.size" @current-change="handleCurrentChange">
       </el-pagination>
     </el-footer>
 
@@ -81,6 +81,11 @@ const loadPlans = () => {
     plans.value = page.data;
     queryForm.total = page.total;
   });
+}
+
+const handleCurrentChange = (val: any) => {
+  queryForm.current = val;
+  loadPlans();
 }
 
 // 切换开关

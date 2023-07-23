@@ -14,7 +14,7 @@
           :default-active="$route.path"
           :collapse-transition="false"
           active-text-color="#409EFF"
-          :default-openeds="['001', '002']"
+          :default-openeds="['200']"
           :unique-opened="false"
           :router="true"
       >
