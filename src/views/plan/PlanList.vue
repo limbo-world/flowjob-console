@@ -85,7 +85,6 @@ const loadPlans = () => {
 
 // 切换开关
 const changeEnable = (planId: any, enable: any) => {
-  console.log(planId, enable)
   if (enable) {
     proxy.$request.post(`/api/v1/plan/start?planId=${planId}`).then((response: any) => {
       loadPlans();

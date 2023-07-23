@@ -1,12 +1,12 @@
 <template>
   <el-form-item label="重试次数">
-    <el-input v-model="option.retry" @change="onChange"/>
+    <el-input v-model="option.retry" @change="onChange" :disabled="disabled"/>
   </el-form-item>
   <el-form-item label="重试间隔">
-    <el-input v-model="option.retryInterval" @change="onChange"/>
+    <el-input v-model="option.retryInterval" @change="onChange" :disabled="disabled"/>
   </el-form-item>
   <el-form-item label="重试方式" v-if="jobType != null && JobTypeEnum.NORMAL.value !== jobType">
-    <el-radio-group v-model="option.retryType" class="ml-4" @change="onChange">
+    <el-radio-group v-model="option.retryType" class="ml-4" @change="onChange" :disabled="disabled">
       <el-radio v-for="item in RetryTypeEnum.getArr()" :label="item.value">{{item.label}}</el-radio>
     </el-radio-group>
   </el-form-item>
@@ -22,7 +22,7 @@ interface RetryOption {
   retryType?: number
 }
 
-const props = defineProps<{ option: RetryOption, jobType: number }>()
+const props = defineProps<{ option: RetryOption, jobType: number, disabled: boolean }>()
 
 let option = toRef(props, "option");
 

@@ -210,3 +210,31 @@ export class WorkerStatusEnum {
         return this.valMap.get(val) as Label;
     }
 }
+
+export class TagFilterConditionEnum {
+    public static UNKNOWN: Label = {label: '未知', value: 0};
+    public static EXISTS: Label = {label: '存在指定名称的标签', value: 1};
+    public static NOT_EXISTS: Label = {label: '不存在指定名称的标签', value: 2};
+    public static MUST_MATCH_VALUE: Label = {label: '存在指定名称的标签且匹配指定值', value: 3};
+    public static MUST_NOT_MATCH_VALUE: Label = {label: '存在指定名称的标签且不匹配指定值', value: 4};
+    public static MUST_MATCH_VALUE_REGEX: Label = {label: '存在指定名称的标签且匹配正则表达式', value: 4};
+
+    private static valMap: Map<string, Label>;
+    static {
+        this.valMap = new Map<string, Label>();
+        this.valMap.set(TagFilterConditionEnum.UNKNOWN.value, TagFilterConditionEnum.UNKNOWN);
+        this.valMap.set(TagFilterConditionEnum.EXISTS.value, TagFilterConditionEnum.EXISTS);
+        this.valMap.set(TagFilterConditionEnum.NOT_EXISTS.value, TagFilterConditionEnum.NOT_EXISTS);
+        this.valMap.set(TagFilterConditionEnum.MUST_MATCH_VALUE.value, TagFilterConditionEnum.MUST_MATCH_VALUE);
+        this.valMap.set(TagFilterConditionEnum.MUST_NOT_MATCH_VALUE.value, TagFilterConditionEnum.MUST_NOT_MATCH_VALUE);
+        this.valMap.set(TagFilterConditionEnum.MUST_MATCH_VALUE_REGEX.value, TagFilterConditionEnum.MUST_MATCH_VALUE_REGEX);
+    }
+
+    static getArr(): Array<Label> {
+        return [TagFilterConditionEnum.EXISTS, TagFilterConditionEnum.NOT_EXISTS, TagFilterConditionEnum.MUST_MATCH_VALUE, TagFilterConditionEnum.MUST_NOT_MATCH_VALUE, TagFilterConditionEnum.MUST_MATCH_VALUE_REGEX];
+    }
+
+    static getByValue(val:string): Label {
+        return this.valMap.get(val) as Label;
+    }
+}

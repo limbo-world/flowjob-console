@@ -1,35 +1,71 @@
 <template>
   <el-form-item label="负载方式">
-    <el-radio-group v-model="option.loadBalanceType" class="ml-4" @change="onChange">
-      <el-radio v-for="item in LoadBalanceTypeEnum.getArr()" :label="item.value">{{item.label}}</el-radio>
+    <el-radio-group v-model="option.loadBalanceType" class="ml-4" @change="onChange" :disabled="disabled">
+      <el-radio v-for="item in LoadBalanceTypeEnum.getArr()" :label="item.value">{{ item.label }}</el-radio>
     </el-radio-group>
   </el-form-item>
   <el-form-item label="所需CPU数">
-    <el-input v-model="option.cpuRequirement" @change="onChange"/>
+    <el-input v-model="option.cpuRequirement" @change="onChange" :disabled="disabled"/>
   </el-form-item>
   <el-form-item label="所需内存大小">
-    <el-input v-model="option.ramRequirement" @change="onChange"/>
+    <el-input v-model="option.ramRequirement" @change="onChange" :disabled="disabled"/>
   </el-form-item>
-<!--  <el-form-item label="标签">-->
-<!--    <el-tag v-for="(itemCategory, idx) in option.tags" :key="itemCategory.text" closable @close="removeCategoryType(idx)"-->
-<!--            type="success" size="big" :disable-transitions="false">{{itemCategory.text}}-->
-<!--    </el-tag>-->
-<!--    <el-input v-model="option.tagFilters" @change="onChange"/>-->
-<!--  </el-form-item>-->
+  <el-form-item label="标签">
+    <el-table :data="option.tagFilters" class="sku-table">
+      <el-table-column label="键" align="center">
+        <template #default="scope">
+          <el-input v-model="scope.row.tagName" @change="onChange" :disabled="disabled"/>
+        </template>
+      </el-table-column>
+      <el-table-column label="值" align="center">
+        <template #default="scope">
+          <el-input v-model="scope.row.tagValue" @change="onChange" :disabled="disabled"/>
+        </template>
+      </el-table-column>
+      <el-table-column label="条件" align="center">
+        <template #default="scope">
+          <el-select v-model="scope.row.condition" placeholder="请选择" :disabled="disabled">
+            <el-option v-for="item in TagFilterConditionEnum.getArr()" :key="item.value" :label="item.label"
+                       :value="item.value"/>
+          </el-select>
+        </template>
+      </el-table-column>
+      <el-table-column align="center">
+        <template #header>
+          <el-button @click="addTagFilterRow" size="small" type="primary" :icon="Plus" circle :disabled="disabled"></el-button>
+        </template>
+        <template #default="scope">
+          <el-popconfirm width="220" confirm-button-text="确认" cancel-button-text="取消" title="确定删除？"
+                         @confirm="removeTagFilterRow(scope.$index)">
+            <template #reference>
+              <el-button size="small" type="danger" :icon="Minus" circle :disabled="disabled"></el-button>
+            </template>
+          </el-popconfirm>
+        </template>
+      </el-table-column>
+    </el-table>
+  </el-form-item>
 </template>
 
 <script setup lang="ts">
-import {LoadBalanceTypeEnum} from '@/types/console-enums';
-import {ref, toRef} from "vue";
+import {Minus, Plus} from '@element-plus/icons-vue'
+import {LoadBalanceTypeEnum, TagFilterConditionEnum} from '@/types/console-enums';
+import {toRef} from "vue";
+
+interface TagFilter {
+  tagName: string,
+  tagValue: string,
+  condition: number
+}
 
 interface DispatchOption {
   loadBalanceType?: number,
   cpuRequirement?: number,
   ramRequirement?: number,
-  tagFilters?: string,
+  tagFilters?: Array<TagFilter>
 }
 
-const props = defineProps<{ option: DispatchOption }>()
+const props = defineProps<{ option: DispatchOption, disabled: boolean }>()
 
 let option = toRef(props, "option")
 
@@ -38,4 +74,18 @@ const emit = defineEmits<{ (e: 'onChange', val: DispatchOption): void }>()
 const onChange = () => {
   emit('onChange', option.value)
 }
+
+const addTagFilterRow = () => {
+  option.value.tagFilters?.push({
+    tagName: "",
+    tagValue: "",
+    condition: TagFilterConditionEnum.EXISTS.value
+  } as TagFilter)
+}
+
+const removeTagFilterRow = (idx: number) => {
+  option.value.tagFilters?.splice(idx, 1);
+  onChange();
+}
+
 </script>
