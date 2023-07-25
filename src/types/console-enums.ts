@@ -264,3 +264,86 @@ export class PlanStatusEnum {
         return this.valMap.get(val) as Label;
     }
 }
+
+export class JobStatusEnum {
+    public static UNKNOWN: Label = {label: '未知', value: 0};
+    public static SCHEDULING: Label = {label: '调度中', value: 10};
+    public static EXECUTING: Label = {label: '执行中', value: 30};
+    public static SUCCEED: Label = {label: '执行成功', value: 40};
+    public static FAILED: Label = {label: '执行失败', value: 50};
+
+    private static valMap: Map<string, Label>;
+    static {
+        this.valMap = new Map<string, Label>();
+        this.valMap.set(JobStatusEnum.UNKNOWN.value, JobStatusEnum.UNKNOWN);
+        this.valMap.set(JobStatusEnum.SCHEDULING.value, JobStatusEnum.SCHEDULING);
+        this.valMap.set(JobStatusEnum.EXECUTING.value, JobStatusEnum.EXECUTING);
+        this.valMap.set(JobStatusEnum.SUCCEED.value, JobStatusEnum.SUCCEED);
+        this.valMap.set(JobStatusEnum.FAILED.value, JobStatusEnum.FAILED);
+    }
+
+    static getArr(): Array<Label> {
+        return [JobStatusEnum.SCHEDULING, JobStatusEnum.EXECUTING, JobStatusEnum.SUCCEED, JobStatusEnum.FAILED];
+    }
+
+    static getByValue(val:string): Label {
+        return this.valMap.get(val) as Label;
+    }
+}
+
+export class TaskStatusEnum {
+    public static UNKNOWN: Label = {label: '未知', value: 0};
+    public static SCHEDULING: Label = {label: '调度中', value: 10};
+    public static DISPATCHING: Label = {label: '下发中', value: 20};
+    public static EXECUTING: Label = {label: '执行中', value: 30};
+    public static SUCCEED: Label = {label: '执行成功', value: 40};
+    public static FAILED: Label = {label: '执行失败', value: 50};
+
+    private static valMap: Map<string, Label>;
+    static {
+        this.valMap = new Map<string, Label>();
+        this.valMap.set(TaskStatusEnum.UNKNOWN.value, TaskStatusEnum.UNKNOWN);
+        this.valMap.set(TaskStatusEnum.SCHEDULING.value, TaskStatusEnum.SCHEDULING);
+        this.valMap.set(TaskStatusEnum.DISPATCHING.value, TaskStatusEnum.DISPATCHING);
+        this.valMap.set(TaskStatusEnum.EXECUTING.value, TaskStatusEnum.EXECUTING);
+        this.valMap.set(TaskStatusEnum.SUCCEED.value, TaskStatusEnum.SUCCEED);
+        this.valMap.set(TaskStatusEnum.FAILED.value, TaskStatusEnum.FAILED);
+    }
+
+    static getArr(): Array<Label> {
+        return [TaskStatusEnum.SCHEDULING, TaskStatusEnum.DISPATCHING, TaskStatusEnum.EXECUTING, TaskStatusEnum.SUCCEED, TaskStatusEnum.FAILED];
+    }
+
+    static getByValue(val:string): Label {
+        return this.valMap.get(val) as Label;
+    }
+}
+
+
+export class TaskTypeEnum {
+    public static UNKNOWN: Label = {label: '未知', value: 0};
+    public static NORMAL: Label = {label: '普通任务', value: 1};
+    public static BROADCAST: Label = {label: '广播任务', value: 2};
+    public static SPLIT: Label = {label: '分片任务', value: 3};
+    public static MAP: Label = {label: 'Map任务', value: 4};
+    public static REDUCE: Label = {label: 'Reduce任务', value: 5};
+
+    private static valMap: Map<string, Label>;
+    static {
+        this.valMap = new Map<string, Label>();
+        this.valMap.set(TaskTypeEnum.UNKNOWN.value, TaskTypeEnum.UNKNOWN);
+        this.valMap.set(TaskTypeEnum.NORMAL.value, TaskTypeEnum.NORMAL);
+        this.valMap.set(TaskTypeEnum.BROADCAST.value, TaskTypeEnum.BROADCAST);
+        this.valMap.set(TaskTypeEnum.SPLIT.value, TaskTypeEnum.SPLIT);
+        this.valMap.set(TaskTypeEnum.MAP.value, TaskTypeEnum.MAP);
+        this.valMap.set(TaskTypeEnum.REDUCE.value, TaskTypeEnum.REDUCE);
+    }
+
+    static getArr(): Array<Label> {
+        return [TaskTypeEnum.NORMAL, TaskTypeEnum.BROADCAST, TaskTypeEnum.SPLIT, TaskTypeEnum.MAP, TaskTypeEnum.REDUCE];
+    }
+
+    static getByValue(val:string): Label {
+        return this.valMap.get(val) as Label;
+    }
+}

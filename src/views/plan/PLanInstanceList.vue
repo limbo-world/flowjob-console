@@ -27,9 +27,9 @@
             {{ TriggerTypeEnum.getByValue(scope.row.triggerType).label }}
           </template>
         </el-table-column>
-        <el-table-column prop="triggerAt" label="期望触发时间"></el-table-column>
-        <el-table-column prop="startAt" label="执行开始时间"></el-table-column>
-        <el-table-column prop="feedbackAt" label="执行结束时间"></el-table-column>
+        <el-table-column prop="triggerAt" label="计划时间"></el-table-column>
+        <el-table-column prop="startAt" label="开始时间"></el-table-column>
+        <el-table-column prop="feedbackAt" label="结束时间"></el-table-column>
         <el-table-column label="状态" width="100">
           <template #default="scope">
             {{ PlanStatusEnum.getByValue(scope.row.status).label }}
@@ -37,6 +37,7 @@
         </el-table-column>
         <el-table-column label="操作" width="200">
           <template #default="scope">
+            <el-button link type="primary" @click="loadDetail(scope.$index, scope.row.planInstanceId)">详情</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -50,6 +51,8 @@
     </el-footer>
 
   </el-container>
+
+  <PlanInstanceDetailComponent :visible="jobInstanceVisible" :planInstanceId="selectPlanInstanceId" @handleClose="() => jobInstanceVisible=false" />
 </template>
 
 <script setup lang="ts">
@@ -57,21 +60,28 @@ import {Search} from '@element-plus/icons-vue'
 import {getCurrentInstance, reactive, ref} from "vue";
 import {useRouter} from 'vue-router'
 import {PlanStatusEnum, TriggerTypeEnum} from '@/types/console-enums';
+import PlanInstanceDetailComponent from '@/components/plan/PlanInstanceDetailComponent.vue'
 
 const {proxy}: any = getCurrentInstance();
 
-let router = useRouter();
+const router = useRouter();
+const planId = router.currentRoute.value.query.planId;
+
+const jobInstanceVisible = ref(false);
+const selectPlanInstanceId = ref();
+
 
 const triggerAtSelect = ref<[string, string]>(['', ''])
 const queryForm = reactive({
   triggerAtBegin: '',
   triggerAtEnd: '',
+  planId: planId,
   current: 1,
   size: 20,
   total: 0
 })
 
-let planInstances = ref([])
+const planInstances = ref([])
 
 // 加载列表
 const loadPlanInstances = () => {
@@ -82,6 +92,13 @@ const loadPlanInstances = () => {
     planInstances.value = page.data;
     queryForm.total = page.total;
   });
+}
+
+const loadDetail = (idx: number, planInstanceId: string) => {
+  // 如果是普通的 抽屉
+  jobInstanceVisible.value = true
+  selectPlanInstanceId.value = planInstanceId
+  // 如果是 工作流 详情
 }
 
 const handleCurrentChange = (val: any) => {

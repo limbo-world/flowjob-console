@@ -40,6 +40,7 @@
           <template #default="scope">
             <el-button link type="primary" @click="toPlanInfo(scope.row.planId, scope.row.planType, false)">查看</el-button>
             <el-button link type="primary" @click="toPlanInfo(scope.row.planId, scope.row.planType, true)">编辑</el-button>
+            <el-button link type="primary" @click="toPlanInstanceList(scope.row.planId)">执行记录</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -112,6 +113,12 @@ const toPlanInfo = (planId: string, planType: number, edit: any) => {
       query: {planId: planId}
     })
   }
+}
+
+const toPlanInstanceList = (planId: string) => {
+  router.push({path: '/plan/instance/list',
+    query: {planId: planId}
+  })
 }
 
 // 初始化

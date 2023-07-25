@@ -14,10 +14,10 @@
           :default-active="$route.path"
           :collapse-transition="false"
           active-text-color="#409EFF"
-          :default-openeds="['200']"
           :unique-opened="false"
           :router="true"
       >
+<!--        :default-openeds="['200']"-->
         <template v-for="menu in menus">
           <!-- 当前菜单无子菜单，即叶子菜单，直接渲染router-link -->
           <el-menu-item v-if="!hasChildren(menu)" :index="menu.code" :route="menu.route" :class="menuHiddenClass">
