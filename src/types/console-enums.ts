@@ -217,7 +217,8 @@ export class TagFilterConditionEnum {
     public static NOT_EXISTS: Label = {label: '不存在指定名称的标签', value: 2};
     public static MUST_MATCH_VALUE: Label = {label: '存在指定名称的标签且匹配指定值', value: 3};
     public static MUST_NOT_MATCH_VALUE: Label = {label: '存在指定名称的标签且不匹配指定值', value: 4};
-    public static MUST_MATCH_VALUE_REGEX: Label = {label: '存在指定名称的标签且匹配正则表达式', value: 4};
+    public static MUST_MATCH_VALUE_REGEX: Label = {label: '存在指定名称的标签且匹配正则表达式', value: 5};
+    public static MATCH_HOST_PORT: Label = {label: '匹配对应的host和port', value: 6};
 
     private static valMap: Map<string, Label>;
     static {
@@ -228,10 +229,13 @@ export class TagFilterConditionEnum {
         this.valMap.set(TagFilterConditionEnum.MUST_MATCH_VALUE.value, TagFilterConditionEnum.MUST_MATCH_VALUE);
         this.valMap.set(TagFilterConditionEnum.MUST_NOT_MATCH_VALUE.value, TagFilterConditionEnum.MUST_NOT_MATCH_VALUE);
         this.valMap.set(TagFilterConditionEnum.MUST_MATCH_VALUE_REGEX.value, TagFilterConditionEnum.MUST_MATCH_VALUE_REGEX);
+        this.valMap.set(TagFilterConditionEnum.MATCH_HOST_PORT.value, TagFilterConditionEnum.MATCH_HOST_PORT);
     }
 
     static getArr(): Array<Label> {
-        return [TagFilterConditionEnum.EXISTS, TagFilterConditionEnum.NOT_EXISTS, TagFilterConditionEnum.MUST_MATCH_VALUE, TagFilterConditionEnum.MUST_NOT_MATCH_VALUE, TagFilterConditionEnum.MUST_MATCH_VALUE_REGEX];
+        return [TagFilterConditionEnum.EXISTS, TagFilterConditionEnum.NOT_EXISTS, TagFilterConditionEnum.MUST_MATCH_VALUE,
+            TagFilterConditionEnum.MUST_NOT_MATCH_VALUE, TagFilterConditionEnum.MUST_MATCH_VALUE_REGEX, TagFilterConditionEnum.MATCH_HOST_PORT
+        ];
     }
 
     static getByValue(val:string): Label {

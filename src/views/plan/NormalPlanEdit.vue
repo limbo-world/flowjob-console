@@ -48,7 +48,7 @@ import ScheduleOptionComponent from '@/components/plan/ScheduleOptionComponent.v
 import RetryOptionComponent from '@/components/plan/RetryOptionComponent.vue'
 import DispatchOptionComponent from '@/components/plan/DispatchOptionComponent.vue'
 import {useRouter} from 'vue-router'
-import { ElMessage } from 'element-plus'
+import {ElMessage} from 'element-plus'
 
 const {proxy}: any = getCurrentInstance();
 
@@ -60,7 +60,7 @@ const disabled: Ref<boolean> = ref(router.currentRoute.value.query.edit !== "tru
 // todo @B 如何从子模块引入
 interface ScheduleOption {
   scheduleType?: number,
-  scheduleStartAt?: number,
+  scheduleRang?: [],
   scheduleDelay?: number,
   scheduleInterval?: number,
   scheduleCron?: string,
@@ -110,7 +110,15 @@ const loadPlan = () => {
     return;
   }
   proxy.$request.get(`/api/v1/plan/get`, {params: {planId: planId}}).then((response: any) => {
-    form.value = response.data;
+    let result = response.data;
+    result.scheduleOption.scheduleRang = [];
+    if (result.scheduleOption.scheduleStartAt) {
+      result.scheduleOption.scheduleRang.push(result.scheduleOption.scheduleStartAt)
+    }
+    if (result.scheduleOption.scheduleEndAt) {
+      result.scheduleOption.scheduleRang.push(result.scheduleOption.scheduleEndAt)
+    }
+    form.value = result;
   });
 }
 

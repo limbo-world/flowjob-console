@@ -1,8 +1,18 @@
 <template>
-    <el-form-item label="调度开始时间">
-      <el-date-picker v-model="option.scheduleStartAt" type="datetime" :disabled="disabled"
-                      value-format="YYYY-MM-DD HH:mm:ss" placeholder="请选择"
-                      @change="onChange"/>
+    <el-form-item label="调度周期">
+<!--      <el-date-picker v-model="option.scheduleStartAt" type="datetime" :disabled="disabled"-->
+<!--                      value-format="YYYY-MM-DD HH:mm:ss" placeholder="请选择"-->
+<!--                      @change="onChange"/>-->
+      <el-date-picker
+          v-model="option.scheduleRang"
+          :disabled="disabled"
+          @change="onChange"
+          type="datetimerange"
+          range-separator="To"
+          value-format="YYYY-MM-DD HH:mm:ss" placeholder="请选择"
+          start-placeholder="请选择开始时间"
+          end-placeholder="请选择结束时间"
+      />
     </el-form-item>
     <el-form-item label="延迟时间">
       <el-input-number v-model="option.scheduleDelay" :min="0" controls-position="right" @change="onChange" :disabled="disabled"/>
@@ -37,7 +47,7 @@ import {ref, toRef} from "vue";
 
 interface ScheduleOption {
   scheduleType?: number,
-  scheduleStartAt?: number,
+  scheduleRang?: [],
   scheduleDelay?: number,
   scheduleInterval?: number,
   scheduleCron?: string,
@@ -46,7 +56,6 @@ interface ScheduleOption {
 
 const props = defineProps<{option:ScheduleOption, disabled:boolean}>()
 
-// let option = ref<ScheduleOption>({})
 let option = toRef(props, "option")
 
 const emit = defineEmits<{(e:'onChange',val:ScheduleOption):void}>()
@@ -55,4 +64,5 @@ const emit = defineEmits<{(e:'onChange',val:ScheduleOption):void}>()
 const onChange = ()=>{
   emit('onChange', option.value)
 }
+
 </script>
