@@ -14,11 +14,18 @@
       </el-table-column>
       <el-table-column label="操作" width="200">
         <template #default="scope">
-          <el-button link type="primary" @click="() => {tasksVisible = true; loadTasks(scope.row.jobInstanceId)}">查看详情</el-button>
+          <el-button link type="primary" @click="() => {
+            tasksVisible = true; taskQueryForm.jobInstanceId = scope.row.jobInstanceId; loadTasks()
+          }">查看详情</el-button>
           <el-button link type="primary" @click="() => {errorVisible = true;errorMsg.value = scope.row.errorMsg}">异常信息</el-button>
         </template>
       </el-table-column>
     </el-table>
+
+    <el-pagination background layout="total, prev, pager, next" :total="jobInstanceQueryForm.total"
+                   :current-page="jobInstanceQueryForm.current"
+                   :page-size="jobInstanceQueryForm.size" @current-change="handleJobInstancePageChange">
+    </el-pagination>
   </el-drawer>
 
   <el-dialog v-model="tasksVisible" width="80%">
@@ -45,6 +52,11 @@
         </template>
       </el-table-column>
     </el-table>
+
+    <el-pagination background layout="total, prev, pager, next" :total="taskQueryForm.total"
+                   :current-page="taskQueryForm.current"
+                   :page-size="taskQueryForm.size" @current-change="taskPageChange">
+    </el-pagination>
   </el-dialog>
 
   <el-dialog v-model="errorVisible" width="50%">
@@ -57,7 +69,7 @@
 
 <script setup lang="ts">
 import {JobStatusEnum, TaskStatusEnum, TaskTypeEnum} from '@/types/console-enums';
-import {getCurrentInstance, ref, toRef, watch} from "vue";
+import {getCurrentInstance, reactive, ref, toRef, watch} from "vue";
 
 const {proxy}: any = getCurrentInstance();
 
@@ -75,25 +87,52 @@ const emit = defineEmits<{ (e: 'handleClose', val: boolean): void }>()
 const jobInstanceVisible = toRef(props, "visible");
 const planInstanceId = toRef(props, "planInstanceId");
 
+const jobInstanceQueryForm = reactive({
+  planInstanceId: '',
+  current: 1,
+  size: 10,
+  total: 0
+})
+
+const taskQueryForm = reactive({
+  jobInstanceId: '',
+  current: 1,
+  size: 10,
+  total: 0
+})
+
 watch(jobInstanceVisible, (newVal, oldVal) => {
-  console.log(12321, newVal, oldVal)
   if (newVal) {
-    loadJobInstances(planInstanceId.value)
+    jobInstanceQueryForm.planInstanceId = planInstanceId.value;
+    loadJobInstances()
   }
 })
 
-const loadJobInstances = (planInstanceId: string) => {
-  proxy.$request.get(`/api/v1/job-instance/page`, {params: {planInstanceId: planInstanceId}}).then((response: any) => {
+
+const loadJobInstances = () => {
+  proxy.$request.get(`/api/v1/job-instance/page`, {params: jobInstanceQueryForm}).then((response: any) => {
     let page = response.data
     jobInstances.value = page.data;
+    jobInstanceQueryForm.total = page.total;
   });
 }
 
-const loadTasks = (jobInstanceId: string) => {
-  proxy.$request.get(`/api/v1/task/page`, {params: {jobInstanceId: jobInstanceId}}).then((response: any) => {
+const loadTasks = () => {
+  proxy.$request.get(`/api/v1/task/page`, {params: taskQueryForm}).then((response: any) => {
     let page = response.data
     tasks.value = page.data;
+    taskQueryForm.total = page.total;
   });
+}
+
+const handleJobInstancePageChange = (val: any) => {
+  jobInstanceQueryForm.current = val;
+  loadJobInstances();
+}
+
+const taskPageChange = (val: any) => {
+  taskQueryForm.current = val;
+  loadTasks();
 }
 
 const handleClose = () =>{

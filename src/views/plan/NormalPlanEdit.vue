@@ -27,6 +27,8 @@
         <el-form-item label="执行器名称">
           <el-input v-model="form.executorName" :disabled="disabled"/>
         </el-form-item>
+        <!-- 属性 -->
+        <JobAttrComponent :attributes="form.attributes" :disabled="disabled" @onChange="receiveJobAttributesChange"/>
         <!-- 重试 -->
         <RetryOptionComponent :job-type="form.type" :option="form.retryOption" :disabled="disabled" @onChange="receiveRetryOptionChange"/>
         <!-- 负载 -->
@@ -47,6 +49,7 @@ import {JobTypeEnum, TriggerTypeEnum} from '@/types/console-enums'
 import ScheduleOptionComponent from '@/components/plan/ScheduleOptionComponent.vue'
 import RetryOptionComponent from '@/components/plan/RetryOptionComponent.vue'
 import DispatchOptionComponent from '@/components/plan/DispatchOptionComponent.vue'
+import JobAttrComponent from '@/components/plan/JobAttrComponent.vue'
 import {useRouter} from 'vue-router'
 import {ElMessage} from 'element-plus'
 
@@ -97,6 +100,7 @@ const form = ref({
   description: '',
   triggerType: 0,
   type: 0,
+  attributes: {},
   scheduleOption: scheduleOptionVal,
   retryOption: retryOptionVal,
   dispatchOption: dispatchOptionVal
@@ -130,12 +134,16 @@ const receiveScheduleOptionChange = (val: ScheduleOption) => {
 const receiveRetryOptionChange = (val:RetryOption)=>{
   form.value.retryOption = val
 }
+const receiveJobAttributesChange = (val: any)=>{
+  console.log("JobAttributes", val);
+  form.value.attributes = val
+  console.log("JobAttributes", form.value.attributes);
+}
 const receiveDispatchOptionChange = (val:DispatchOption)=>{
   form.value.dispatchOption = val
 }
 
 const onSubmit = () => {
-  console.log(form.value)
   const planParam = form.value;
   console.log(planParam)
   // 根据id判断更新还是新增
