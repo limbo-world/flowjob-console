@@ -632,7 +632,7 @@ export interface PlanDTO {
 
 export interface PlanDagData {
   nodes: Map<string, PlanDagNodeData>
-  edges: Map<string, object>
+  // edges: Map<string, object>
 }
 
 export interface PlanDagNodeData {

@@ -14,13 +14,14 @@ import { computed, Ref, ref } from "vue";
 import { Graph } from "@antv/x6";
 import { PlanDagData, PlanDTO, WorkflowJobDTO } from "@/types/swagger-ts-api";
 import { useX6Graph, autoLayout, refreshDAGJobNodes } from "@/components/workflow/X6GraphIntergration";
+
 import { useGraphContextMenu } from "@/components/workflow/GraphContextMenuIntergration";
 import GraphContextMenu from "./GraphContextMenu.vue"
 
 
 const plan: Ref<PlanDTO | undefined> = ref();
 const x6ContainerId = computed<string>(() => 'x6Container_' + plan.value?.planId);
-const { x6GraphRef } = useX6Graph(x6ContainerId.value);
+const { x6GraphRef } = useX6Graph(x6ContainerId.value, plan);
 const contextMenuRef = ref();
 const { contextMenuData } = useGraphContextMenu({
     x6GraphRef, 
