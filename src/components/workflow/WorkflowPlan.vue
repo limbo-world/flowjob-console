@@ -1,6 +1,5 @@
 <template>
 
-
     <div class="workerflow-plan-dag">
         <div :id="x6ContainerId" class="workflow-x6-container">
         </div>
