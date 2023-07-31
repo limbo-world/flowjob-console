@@ -42,7 +42,7 @@
             <el-button link type="primary" @click="toPlanInfo(scope.row.planId, scope.row.planType, true)">编辑</el-button>
             <el-button link type="primary" @click="schedulePlan(scope.row.planId)">运行</el-button>
             <el-button link type="primary" @click="toPlanInstanceList(scope.row.planId)">记录</el-button>
-            <el-button link type="primary" @click="() => {currentPlan = scope.row; loadVersions();}">版本</el-button>
+            <el-button link type="primary" @click="() => {versionQueryForm.planId = scope.row.planId; loadVersions()}">版本</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -62,12 +62,12 @@
         <el-table-column prop="createdAt" label="创建时间"></el-table-column>
         <el-table-column label="状态" width="100">
           <template #default="scope">
-            {{ versionQueryForm.currentVersion === scope.row.planInfoId ? "生效中" : "未生效" }}
+            {{ currentPlan.planInfoId === scope.row.planInfoId ? "生效中" : "未生效" }}
           </template>
         </el-table-column>
         <el-table-column label="操作" width="200">
           <template #default="scope">
-            <el-button link type="primary" @click="() => {errorVisible = true;errorMsg.value = scope.row.errorMsg}">生效</el-button>
+            <el-button link type="primary" @click="() => effectVersion(scope.row.planInfoId)">生效</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -101,7 +101,6 @@ const planQueryForm = reactive({
 
 const versionQueryForm = reactive({
   planId: '',
-  currentVersion: '',
   current: 1,
   size: 10,
   total: 0
@@ -122,15 +121,26 @@ const loadPlans = () => {
 }
 
 const loadVersions = () => {
-  versionQueryForm.planId = currentPlan.value.planId;
-  versionQueryForm.currentVersion = currentPlan.value.currentVersion;
+  // 获取plan信息
+  proxy.$request.get(`/api/v1/plan/get?planId=${versionQueryForm.planId}`).then((response: any) => {
+    currentPlan.value = response.data;
+    console.log(currentPlan)
 
-  proxy.$request.get(`/api/v1/plan/version/page`, {params: versionQueryForm}).then((response: any) => {
-    let page = response.data
-    versions.value = page.data;
-    versionQueryForm.total = page.total;
-    versionVisible.value = true;
+    // 版本列表
+    proxy.$request.get(`/api/v1/plan/version/page`, {params: versionQueryForm}).then((response: any) => {
+      let page = response.data
+      versions.value = page.data;
+      versionQueryForm.total = page.total;
+      versionVisible.value = true;
+    });
+
   });
+}
+
+const effectVersion = (version: string) => {
+  proxy.$request.post(`/api/v1/plan/version?planId=${versionQueryForm.planId}&version=${version}`).then((response: any) => {
+    loadVersions();
+  })
 }
 
 const handleCurrentChange = (val: any) => {
