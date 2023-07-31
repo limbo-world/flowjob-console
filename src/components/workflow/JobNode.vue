@@ -2,9 +2,9 @@
 <div class="node running">
     <img :src="logoPath" />
     <span class="label">{{ nodeStatus.label }}</span>
-    <span class="status">
+    <!-- <span class="status">
         <img :src="statusImage" />
-    </span>
+    </span> -->
 </div>
 </template>
     

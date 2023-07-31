@@ -10,6 +10,18 @@
             <span class="menu-name">{{ menu.menuName }}</span>
         </div>
     </div>
+
+    <div class="nav-menu">
+        <div v-for="menu in menus" :key="menu.menuId"
+             class="nav-menu-item" 
+             @click="menu.menuCallback"
+        >
+            <el-icon class="menu-icon"> 
+                <component :is="Icons.get(menu.menuIcon)"></component>
+            </el-icon>
+            <span class="menu-name">{{ menu.menuName }}</span>
+        </div>
+    </div>
 </template>
 
 
@@ -138,6 +150,38 @@ defineExpose({
             border-radius: 0 0 6px 6px;
         }
     }
+    .menu-name {
+        padding-left: 5px;
+        line-break: 30px;
+        font-size: 12px;
+        color: #666;
+    }
+}
+
+.nav-menu {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+
+    display: flex;
+    // box-shadow: 0 2px 5px 1px rgba(0, 0, 0, 0.06);
+
+
+    .nav-menu-item {
+        display: flex;
+        align-items: center;
+        cursor: pointer;
+        padding: 5px 10px;
+        margin-right: 10px;
+
+        box-shadow: 0 2px 5px 1px rgba(0, 0, 0, 0.06);
+        background-color: white;
+
+        &:hover {
+            background-color: #ecf5ff;
+        }
+    }
+
     .menu-name {
         padding-left: 5px;
         line-break: 30px;
