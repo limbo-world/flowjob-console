@@ -10,24 +10,13 @@
             <span class="menu-name">{{ menu.menuName }}</span>
         </div>
     </div>
-
-    <div class="nav-menu">
-        <div v-for="menu in menus" :key="menu.menuId"
-             class="nav-menu-item" 
-             @click="menu.menuCallback"
-        >
-            <el-icon class="menu-icon"> 
-                <component :is="Icons.get(menu.menuIcon)"></component>
-            </el-icon>
-            <span class="menu-name">{{ menu.menuName }}</span>
-        </div>
-    </div>
 </template>
 
 
 <script setup lang="ts">
 import { computed, ref, toRef } from "vue";
 import * as ElementPlusIconsVue from '@element-plus/icons-vue'
+import menu from "@/libs/router/menu";
 
 /**
  * 全部组件
@@ -37,28 +26,21 @@ for (const [key, component] of Object.entries(ElementPlusIconsVue)) {
     Icons.set(key, component);
 }
 
-interface ContextMenuProps {
-    menus: ContextMenuItem[]
-}
-
 /**
  * 定义菜单项类型
  */
-interface ContextMenuItem{
+interface MenuItem{
     menuId: string,
     menuIcon: string,
     menuName: string,
     menuCallback: (id: string) => void
 }
 
-// 组件属性：菜单
-const props = defineProps<ContextMenuProps>();
-
 // 菜单是否可见
 const visible = ref(false);
 
 // 菜单项
-const menus = toRef(props, 'menus');
+const menus = ref<MenuItem[]>([]);
 
 // 坐标，在页面视图中的坐标
 const position = ref({
@@ -69,6 +51,39 @@ const position = ref({
 const positionInGraph = ref({
     x: 0, y: 0
 });
+
+// 计算样式
+const menuStyle = computed<string>(() => [
+    'top:' + position.value.y + 'px',
+    'left:' + position.value.x + 'px',
+].join(';'));
+
+
+/**
+ * 展示上下文菜单
+ * @param pos 菜单位置，相对于页面左上角的位置
+ * @param menuItems 菜单项，不传则不更新菜单项
+ */
+function showContextMenu(pos: {x: number, y: number}, menuItems: MenuItem[] | undefined) {
+    if (menuItems) {
+        menus.value = menuItems;
+    }
+    position.value = { ...pos }
+    visible.value = true;
+}
+
+
+/**
+ * 隐藏上下文菜单
+ * @param menuItems 
+ */
+function hideContextMenu(menuItems: MenuItem[] | undefined) {
+    if (menuItems) {
+        menus.value = menuItems;
+    }
+    visible.value = false;
+}
+
 
 /**
  * 设置菜单是否可见
@@ -105,21 +120,15 @@ function getPositionInGraph() {
     return { ...positionInGraph.value }
 }
 
-// 计算样式
-const menuStyle = computed<string>(() => [
-    'top:' + position.value.y + 'px',
-    'left:' + position.value.x + 'px',
-].join(';'));
-
 
 
 // 暴露的共有方法
 defineExpose({
-    setVisible,
     getPosition,
-    setPosition,
-    getPositionInGraph,
     setPositionInGraph,
+    getPositionInGraph,
+    showContextMenu,
+    hideContextMenu,
 });
 
 </script>
@@ -157,37 +166,4 @@ defineExpose({
         color: #666;
     }
 }
-
-.nav-menu {
-    position: absolute;
-    top: 10px;
-    left: 10px;
-
-    display: flex;
-    // box-shadow: 0 2px 5px 1px rgba(0, 0, 0, 0.06);
-
-
-    .nav-menu-item {
-        display: flex;
-        align-items: center;
-        cursor: pointer;
-        padding: 5px 10px;
-        margin-right: 10px;
-
-        box-shadow: 0 2px 5px 1px rgba(0, 0, 0, 0.06);
-        background-color: white;
-
-        &:hover {
-            background-color: #ecf5ff;
-        }
-    }
-
-    .menu-name {
-        padding-left: 5px;
-        line-break: 30px;
-        font-size: 12px;
-        color: #666;
-    }
-}
-
 </style>

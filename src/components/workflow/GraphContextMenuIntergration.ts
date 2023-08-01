@@ -4,17 +4,19 @@ import { Graph } from "@antv/x6";
 import { PlanDTO, WorkflowJobDTO } from "@/types/swagger-ts-api";
 import { JobTypeEnum, LoadBalanceTypeEnum, TriggerTypeEnum } from "@/types/console-enums";
 import { autoLayout, generateNodesAndEdges } from "./X6GraphIntergration";
-import GraphContextMenu from "./GraphContextMenu.vue"
+import GraphContextMenu from "./menu/GraphContextMenu.vue"
+import GraphNavMenu from "./menu/GraphNavMenu.vue"
 
 
 export function useGraphContextMenu(params: {
     x6GraphRef: Ref<Graph | undefined>,
     contextMenuRef: Ref<ComponentPublicInstance<typeof GraphContextMenu>>,
+    navMenuRef: Ref<ComponentPublicInstance<typeof GraphNavMenu>>,
     planRef: Ref<PlanDTO | undefined>,
     refreshPlanDAG: (jobs: WorkflowJobDTO[]) => void
 }) {
 
-    const { x6GraphRef, contextMenuRef, planRef } = params;
+    const { x6GraphRef, contextMenuRef, navMenuRef, planRef } = params;
 
     // 菜单数据
     const contextMenuData = [
@@ -27,7 +29,7 @@ export function useGraphContextMenu(params: {
                 const newJob = addEmptyNode(plan, contextMenuRef?.value.getPositionInGraph());
                 const { nodes } = generateNodesAndEdges(x6GraphRef.value as Graph, plan.dagData, [newJob]);
                 x6GraphRef.value?.addNodes(nodes);
-                contextMenuRef.value?.setVisible(false);
+                contextMenuRef.value?.hideContextMenu();
             }
         },
         {
@@ -36,7 +38,7 @@ export function useGraphContextMenu(params: {
             menuName: '居中',
             menuCallback: () => {
                 (x6GraphRef?.value as Graph)?.centerContent();
-                contextMenuRef.value?.setVisible(false);
+                contextMenuRef.value?.hideContextMenu();
             }
         },
         {
@@ -45,7 +47,7 @@ export function useGraphContextMenu(params: {
             menuName: '自适应布局',
             menuCallback: () => {
                 autoLayout(x6GraphRef?.value as Graph, planRef, 'TB');
-                contextMenuRef.value?.setVisible(false);
+                contextMenuRef.value?.hideContextMenu();
             }
         },
     ];
@@ -60,9 +62,9 @@ export function useGraphContextMenu(params: {
                 return;
             }
 
-            contextMenu.setPosition({x: e.clientX, y: e.clientY});
+
+            contextMenu.showContextMenu({x: e.clientX, y: e.clientY}, contextMenuData);
             contextMenu.setPositionInGraph({x, y});
-            contextMenu.setVisible(true);
         });
 
         // 注册其他事件：关闭菜单
@@ -74,8 +76,11 @@ export function useGraphContextMenu(params: {
             'blank:mousedown'
         ];
         closeMenuEvents.forEach(e => x6GraphRef.value?.on(e, () => {
-            contextMenuRef.value?.setVisible(false);
-        }))
+            contextMenuRef.value?.hideContextMenu();
+        }));
+
+        // 设置导航菜单
+        navMenuRef.value.updateMenuItems(contextMenuData);
     });
 
 

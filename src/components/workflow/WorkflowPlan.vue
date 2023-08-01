@@ -4,7 +4,8 @@
         <div :id="x6ContainerId" class="workflow-x6-container">
         </div>
 
-        <graph-context-menu ref="contextMenuRef" :menus="contextMenuData"></graph-context-menu>
+        <graph-context-menu ref="contextMenuRef"></graph-context-menu>
+        <graph-nav-menu ref="navMenuRef"></graph-nav-menu>
     </div>
 </template>
 
@@ -15,23 +16,32 @@ import { Graph } from "@antv/x6";
 import { PlanDagData, PlanDTO, WorkflowJobDTO } from "@/types/swagger-ts-api";
 import { useX6Graph, autoLayout, refreshDAGJobNodes } from "@/components/workflow/X6GraphIntergration";
 
-import { useGraphContextMenu } from "@/components/workflow/GraphContextMenuIntergration";
-import GraphContextMenu from "./GraphContextMenu.vue"
+import { useGraphContextMenu } from "./GraphContextMenuIntergration";
+import { useX6GraphEdge } from "./X6GraphEdgeIntergration";
+import GraphContextMenu from "./menu/GraphContextMenu.vue"
+import GraphNavMenu from './menu/GraphNavMenu.vue'
 
 
 const plan: Ref<PlanDTO | undefined> = ref();
 const x6ContainerId = computed<string>(() => 'x6Container_' + plan.value?.planId);
 const { x6GraphRef } = useX6Graph(x6ContainerId.value, plan);
 const contextMenuRef = ref();
+const navMenuRef = ref();
 const { contextMenuData } = useGraphContextMenu({
     x6GraphRef, 
     contextMenuRef, 
+    navMenuRef,
     planRef: plan, 
     refreshPlanDAG: (jobs: WorkflowJobDTO[]) => refreshDAGJobNodes(
         x6GraphRef.value as Graph,
         plan?.value?.dagData as PlanDagData,
         jobs
     )
+});
+
+useX6GraphEdge({
+    planRef: plan,
+    x6GraphRef,
 });
 
 

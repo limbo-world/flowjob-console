@@ -164,41 +164,14 @@ export function useX6Graph(graphContainerId: string, planRef: Ref<PlanDTO | unde
                 }
             })
         });
-
-        // 连线事件
-        x6GraphRef.value?.on('edge:connected', ({ edge }) => onEdgeConnected(planRef.value as PlanDTO, edge))
+        
+        x6GraphRef.value?.on('node:click', (e) => console.log('node click', e))
+        x6GraphRef.value?.on('cell:click', (e) => console.log('cell click', e))
         
     })
 
     return {
         x6GraphRef
-    }
-}
-
-
-/**
- * x6 新增连线时，记录节点的父子关系到 plan
- * @param plan 任务
- * @param edge 新增的连线
- */
-function onEdgeConnected(plan: PlanDTO, edge: Edge) {
-    const source = edge.source as Edge.TerminalCellLooseData;
-    const target = edge.target as Edge.TerminalCellLooseData;
-
-    let parent!: WorkflowJobDTO;
-    let child!: WorkflowJobDTO;
-    plan.workflow?.forEach(job => {
-        if (job.id === source.cell) {
-            parent = job;
-        }
-        if (job.id === target.cell) {
-            child = job;
-        }
-    });
-
-    if (parent && child) {
-        parent.children?.push(child?.id)
-        console.log(`作业 ${child.id} 添加到 ${parent.id} 的子节点`)
     }
 }
 
@@ -324,17 +297,17 @@ export function generateNodesAndEdges(x6Graph: Graph, dagData: PlanDagData, jobs
 
             // 添加连线
             jobEdgeMetas.push({
-                "id": edgeId,
-                "shape": "dag-edge",
-                "source": {
-                    "cell": job?.id,
-                    "port": 'bottomPort'
+                id: edgeId,
+                shape: 'dag-edge',
+                source: {
+                    cell: job?.id,
+                    port: 'bottomPort'
                 },
-                "target": {
-                    "cell": childJobId,
-                    "port": 'topPort'
+                target: {
+                    cell: childJobId,
+                    port: 'topPort'
                 },
-                "zIndex": 0
+                zIndex: 0
             });
         });
     });
