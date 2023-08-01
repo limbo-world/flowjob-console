@@ -16,7 +16,7 @@
 <script setup lang="ts">
 import { ref } from "vue";
 import * as ElementPlusIconsVue from '@element-plus/icons-vue'
-import MenuItem from "./MenuItem";
+import { MenuItem } from "./Menus";
 
 /**
  * 全部组件

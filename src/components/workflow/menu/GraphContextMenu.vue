@@ -16,7 +16,7 @@
 <script setup lang="ts">
 import { computed, ref, toRef } from "vue";
 import * as ElementPlusIconsVue from '@element-plus/icons-vue'
-import menu from "@/libs/router/menu";
+import { MenuItem } from "./Menus";
 
 /**
  * 全部组件
@@ -24,16 +24,6 @@ import menu from "@/libs/router/menu";
 const Icons: Map<string, any> = new Map();
 for (const [key, component] of Object.entries(ElementPlusIconsVue)) {
     Icons.set(key, component);
-}
-
-/**
- * 定义菜单项类型
- */
-interface MenuItem{
-    menuId: string,
-    menuIcon: string,
-    menuName: string,
-    menuCallback: (id: string) => void
 }
 
 // 菜单是否可见
