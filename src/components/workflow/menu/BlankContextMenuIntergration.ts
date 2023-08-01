@@ -1,8 +1,9 @@
 import { PlanDTO } from "@/types/swagger-ts-api";
-import { addEmptyNode, MenuItem, MenuIntegerationArgs } from "./Menus";
+import { MenuItem, MenuIntegerationArgs } from "./Menus";
 import { autoLayout, generateNodesAndEdges } from "../X6GraphIntergration";
 import { Graph } from "@antv/x6";
 import { onMounted } from "vue";
+import { addEmptyNode } from "../WorkflowPlanFunctions";
 
 
 export function useBlankContextMenu(params: MenuIntegerationArgs) {

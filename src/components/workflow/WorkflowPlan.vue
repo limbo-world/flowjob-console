@@ -17,9 +17,10 @@ import { PlanDagData, PlanDTO, WorkflowJobDTO } from "@/types/swagger-ts-api";
 import { useX6Graph, autoLayout, refreshDAGJobNodes } from "@/components/workflow/X6GraphIntergration";
 
 import { useGraphContextMenu } from "./menu/GraphContextMenuIntergration";
-import { useX6GraphEdge } from "./X6GraphEdgeIntergration";
+import { useEdgeMenu } from "./menu/EdgeMenuIntergration";
 import GraphContextMenu from "./menu/GraphContextMenu.vue"
 import GraphNavMenu from './menu/GraphNavMenu.vue'
+import { MenuIntegerationArgs } from "./menu/Menus";
 
 
 const plan: Ref<PlanDTO | undefined> = ref();
@@ -28,22 +29,14 @@ const { x6GraphRef } = useX6Graph(x6ContainerId.value, plan);
 const contextMenuRef = ref();
 const navMenuRef = ref();
 
-useGraphContextMenu({
+const menuIntergrationArgs: MenuIntegerationArgs = {
     x6GraphRef, 
     contextMenuRef, 
     navMenuRef,
-    planRef: plan, 
-    refreshPlanDAG: (jobs: WorkflowJobDTO[]) => refreshDAGJobNodes(
-        x6GraphRef.value as Graph,
-        plan?.value?.dagData as PlanDagData,
-        jobs
-    )
-});
-
-useX6GraphEdge({
-    planRef: plan,
-    x6GraphRef,
-});
+    planRef: plan
+};
+useGraphContextMenu(menuIntergrationArgs);
+useEdgeMenu(menuIntergrationArgs);
 
 
 /**
@@ -171,4 +164,4 @@ defineExpose({
         }
     }
 }
-</style>./menu/GraphContextMenuIntergration
+</style>./menu/GraphContextMenuIntergration./EdgeMenuIntergration

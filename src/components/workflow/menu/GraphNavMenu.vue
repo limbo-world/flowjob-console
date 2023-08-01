@@ -17,6 +17,7 @@
 import { ref } from "vue";
 import * as ElementPlusIconsVue from '@element-plus/icons-vue'
 import { MenuItem } from "./Menus";
+import menu from "@/libs/router/menu";
 
 /**
  * 全部组件
@@ -25,9 +26,6 @@ const Icons: Map<string, any> = new Map();
 for (const [key, component] of Object.entries(ElementPlusIconsVue)) {
     Icons.set(key, component);
 }
-
-// 菜单是否可见
-const visible = ref(false);
 
 // 菜单项
 const menus = ref<MenuItem[]>([]);
@@ -42,10 +40,38 @@ function updateMenuItems(menuItems: MenuItem[]) {
 }
 
 
+/**
+ * 添加导航菜单项
+ */
+function addMenuItem(menuItem: MenuItem) {
+    // 有则更新
+    for (let i = 0; i < menus.value.length; i++) {
+        const m = menus.value[i];
+        if (menuItem.menuId === m.menuId) {
+            menus.value[i] = menuItem;
+            return;
+        }
+    }
+    
+    // 无则新增
+    menus.value.push(menuItem);
+}
+
+
+/**
+ * 移除导航菜单项
+ * @param menuId 菜单项 ID
+ */
+function removeMenuItem(menuId: string) {
+    menus.value = menus.value.filter(m => menuId != m.menuId);
+}
+
 
 // 暴露的共有方法
 defineExpose({
-    updateMenuItems
+    updateMenuItems,
+    addMenuItem,
+    removeMenuItem,
 });
 </script>
 
