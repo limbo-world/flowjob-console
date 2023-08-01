@@ -17,6 +17,15 @@ export interface MenuItem {
 
 
 /**
+ * 菜单组
+ */
+export interface MenuItemGroup {
+    groupId: string;
+    menus: MenuItem[];
+}
+
+
+/**
  * 集成菜单功能时的参数
  */
 export interface MenuIntegerationArgs {

@@ -1,14 +1,11 @@
 <template>
     <div class="nav-menu">
-        <div v-for="menu in menus" :key="menu.menuId"
-             class="nav-menu-item" 
-             @click="menu.menuCallback"
-        >
-            <el-icon class="menu-icon"> 
-                <component :is="Icons.get(menu.menuIcon)"></component>
-            </el-icon>
-            <span class="menu-name">{{ menu.menuName }}</span>
-        </div>
+        <el-button-group>
+            <el-button v-for="menu in menus" :key="menu.menuId" 
+                       type="default" :icon="Icons.get(menu.menuIcon)"
+                       @click="menu.menuCallback"
+            >{{ menu.menuName }}</el-button>
+        </el-button-group>
     </div>
 </template>
 
@@ -17,7 +14,6 @@
 import { ref } from "vue";
 import * as ElementPlusIconsVue from '@element-plus/icons-vue'
 import { MenuItem } from "./Menus";
-import menu from "@/libs/router/menu";
 
 /**
  * 全部组件
@@ -82,30 +78,9 @@ defineExpose({
     top: 10px;
     left: 10px;
 
-    display: flex;
-    // box-shadow: 0 2px 5px 1px rgba(0, 0, 0, 0.06);
-
-
-    .nav-menu-item {
-        display: flex;
-        align-items: center;
-        cursor: pointer;
-        padding: 5px 10px;
-        margin-right: 10px;
-
-        box-shadow: 0 2px 5px 1px rgba(0, 0, 0, 0.06);
-        background-color: white;
-
-        &:hover {
-            background-color: #ecf5ff;
-        }
-    }
-
-    .menu-name {
-        padding-left: 5px;
-        line-break: 30px;
+    .el-button {
         font-size: 12px;
-        color: #666;
+        font-weight: normal;
     }
 }
 
