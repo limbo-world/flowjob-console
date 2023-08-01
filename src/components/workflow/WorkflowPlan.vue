@@ -16,8 +16,7 @@ import { Graph } from "@antv/x6";
 import { PlanDagData, PlanDTO, WorkflowJobDTO } from "@/types/swagger-ts-api";
 import { useX6Graph, autoLayout, refreshDAGJobNodes } from "@/components/workflow/X6GraphIntergration";
 
-import { useGraphContextMenu } from "./menu/GraphContextMenuIntergration";
-import { useEdgeMenu } from "./menu/EdgeMenuIntergration";
+import { useGraphContextMenu } from "./menu/GraphMenuIntergration";
 import GraphContextMenu from "./menu/GraphContextMenu.vue"
 import GraphNavMenu from './menu/GraphNavMenu.vue'
 import { MenuIntegerationArgs } from "./menu/Menus";
@@ -36,7 +35,6 @@ const menuIntergrationArgs: MenuIntegerationArgs = {
     planRef: plan
 };
 useGraphContextMenu(menuIntergrationArgs);
-useEdgeMenu(menuIntergrationArgs);
 
 
 /**
@@ -164,4 +162,4 @@ defineExpose({
         }
     }
 }
-</style>./menu/GraphContextMenuIntergration./EdgeMenuIntergration
+</style>./menu/GraphContextMenuIntergration./EdgeMenuIntergration./menu/GraphMenuIntergration

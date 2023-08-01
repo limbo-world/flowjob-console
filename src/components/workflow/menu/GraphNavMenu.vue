@@ -1,7 +1,7 @@
 <template>
     <div class="nav-menu">
-        <el-button-group>
-            <el-button v-for="menu in menus" :key="menu.menuId" 
+        <el-button-group v-for="group in menus" :key="group.groupId">
+            <el-button v-for="menu in group.menus" :key="menu.menuId" 
                        type="default" :icon="Icons.get(menu.menuIcon)"
                        @click="menu.menuCallback"
             >{{ menu.menuName }}</el-button>
@@ -13,7 +13,7 @@
 <script setup lang="ts">
 import { ref } from "vue";
 import * as ElementPlusIconsVue from '@element-plus/icons-vue'
-import { MenuItem } from "./Menus";
+import { MenuItemGroup } from "./Menus";
 
 /**
  * 全部组件
@@ -24,33 +24,33 @@ for (const [key, component] of Object.entries(ElementPlusIconsVue)) {
 }
 
 // 菜单项
-const menus = ref<MenuItem[]>([]);
+const menus = ref<MenuItemGroup[]>([]);
 
 
 /**
  * 更新导航菜单
- * @param menuItems 菜单项，不传则不更新菜单项
+ * @param menuGroups 菜单组列表
  */
-function updateMenuItems(menuItems: MenuItem[]) {
-    menus.value = menuItems;
+function updateMenus(menuGroups: MenuItemGroup[]) {
+    menus.value = menuGroups;
 }
 
 
 /**
  * 添加导航菜单项
  */
-function addMenuItem(menuItem: MenuItem) {
+function addMenuGroup(menuGroup: MenuItemGroup) {
     // 有则更新
     for (let i = 0; i < menus.value.length; i++) {
         const m = menus.value[i];
-        if (menuItem.menuId === m.menuId) {
-            menus.value[i] = menuItem;
+        if (menuGroup.groupId === m.groupId) {
+            menus.value[i] = menuGroup;
             return;
         }
     }
     
     // 无则新增
-    menus.value.push(menuItem);
+    menus.value.push(menuGroup);
 }
 
 
@@ -58,16 +58,16 @@ function addMenuItem(menuItem: MenuItem) {
  * 移除导航菜单项
  * @param menuId 菜单项 ID
  */
-function removeMenuItem(menuId: string) {
-    menus.value = menus.value.filter(m => menuId != m.menuId);
+function removeMenuGroup(groupId: string) {
+    menus.value = menus.value.filter(m => groupId != m.groupId);
 }
 
 
 // 暴露的共有方法
 defineExpose({
-    updateMenuItems,
-    addMenuItem,
-    removeMenuItem,
+    updateMenus,
+    addMenuGroup,
+    removeMenuGroup,
 });
 </script>
 

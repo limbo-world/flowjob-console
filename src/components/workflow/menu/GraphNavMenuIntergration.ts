@@ -9,7 +9,10 @@ export function useGraphNavMenu(params: MenuIntegerationArgs) {
 
     onMounted(() => {
         // 设置导航菜单
-        navMenuRef.value.updateMenuItems(contextMenuItems);
+        navMenuRef.value.updateMenus([{
+            groupId: 'default',
+            menus: contextMenuItems
+        }]);
     });
 
     return toRefs({

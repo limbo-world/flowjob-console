@@ -21,11 +21,16 @@ export function useEdgeMenu(params: MenuIntegerationArgs) {
 
         // TODO 连线单选事件，添加删除连线按钮到 contextMenu
         x6GraphRef.value?.on('edge:click', ({ edge }) => {
-            navMenuRef.value.addMenuItem({
-                menuId: 'delteEdge',
-                menuIcon: 'Delete',
-                menuName: '删除',
-                menuCallback: (id: string) => {}
+            navMenuRef.value.addMenuGroup({
+                groupId: 'edgeMenus',
+                menus: [
+                    {
+                        menuId: 'delteEdge',
+                        menuIcon: 'Delete',
+                        menuName: '删除',
+                        menuCallback: (id: string) => {}
+                    }
+                ]
             });
             // 连线标红
             edge.attr('line/stroke', '#FF0000')
