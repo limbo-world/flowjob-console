@@ -77,7 +77,7 @@ const queryForm = reactive({
   triggerAtEnd: '',
   planId: planId,
   current: 1,
-  size: 20,
+  size: 10,
   total: 0
 })
 

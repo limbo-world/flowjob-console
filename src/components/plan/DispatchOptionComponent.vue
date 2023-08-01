@@ -11,7 +11,7 @@
     <el-input v-model="option.ramRequirement" @change="onChange" :disabled="disabled"/>
   </el-form-item>
   <el-form-item label="标签">
-    <el-table :data="option.tagFilters" class="sku-table">
+    <el-table :data="option.tagFilters">
       <el-table-column label="键" align="center">
         <template #default="scope">
           <el-input v-model="scope.row.tagName" @change="onChange" :disabled="disabled"/>
@@ -35,7 +35,7 @@
           <el-button @click="addTagFilterRow" size="small" type="primary" :icon="Plus" circle :disabled="disabled"></el-button>
         </template>
         <template #default="scope">
-          <el-popconfirm width="220" confirm-button-text="确认" cancel-button-text="取消" title="确定删除？"
+          <el-popconfirm width="200" confirm-button-text="确认" cancel-button-text="取消" title="确定删除？"
                          @confirm="removeTagFilterRow(scope.$index)">
             <template #reference>
               <el-button size="small" type="danger" :icon="Minus" circle :disabled="disabled"></el-button>
