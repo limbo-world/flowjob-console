@@ -2,7 +2,8 @@
     <div class="nav-menu">
         <el-button-group v-for="group in menus" :key="group.groupId">
             <el-button v-for="menu in group.menus" :key="menu.menuId" 
-                       type="default" :icon="Icons.get(menu.menuIcon)"
+                       :type="menu.menuType ? menu.menuType : 'default'" 
+                       :icon="Icons.get(menu.menuIcon)"
                        @click="menu.menuCallback"
             >{{ menu.menuName }}</el-button>
         </el-button-group>
@@ -22,6 +23,7 @@ const Icons: Map<string, any> = new Map();
 for (const [key, component] of Object.entries(ElementPlusIconsVue)) {
     Icons.set(key, component);
 }
+
 
 // 菜单项
 const menus = ref<MenuItemGroup[]>([]);
@@ -77,6 +79,10 @@ defineExpose({
     position: absolute;
     top: 10px;
     left: 10px;
+
+    .el-button-group:not(:first-child) {
+        margin-left: 10px;
+    }
 
     .el-button {
         font-size: 12px;

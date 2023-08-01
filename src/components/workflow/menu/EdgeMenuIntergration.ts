@@ -21,6 +21,7 @@ export function useEdgeMenu(params: MenuIntegerationArgs) {
 
         // TODO 连线单选事件，添加删除连线按钮到 contextMenu
         x6GraphRef.value?.on('edge:click', ({ edge }) => {
+            debugger
             navMenuRef.value.addMenuGroup({
                 groupId: 'edgeMenus',
                 menus: [
@@ -28,6 +29,7 @@ export function useEdgeMenu(params: MenuIntegerationArgs) {
                         menuId: 'delteEdge',
                         menuIcon: 'Delete',
                         menuName: '删除',
+                        menuType: 'danger',
                         menuCallback: (id: string) => {}
                     }
                 ]

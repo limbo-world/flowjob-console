@@ -3,6 +3,7 @@ import { Graph } from "@antv/x6"
 import { ComponentPublicInstance, Ref } from "vue"
 import GraphContextMenu from "./GraphContextMenu.vue"
 import GraphNavMenu from "./GraphNavMenu.vue"
+import { ButtonType } from "element-plus"
 
 
 /** 
@@ -12,6 +13,7 @@ export interface MenuItem {
     menuId: string,
     menuIcon: string,
     menuName: string,
+    menuType?: ButtonType,
     menuCallback: (id: string) => void
 }
 
