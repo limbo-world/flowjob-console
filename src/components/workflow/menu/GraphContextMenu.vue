@@ -1,6 +1,7 @@
 <template>
     <div class="context-menu" :style="menuStyle" v-if="visible">
         <div v-for="menu in menusVisible" :key="menu.menuId"
+             :type="menu.menuType ? menu.menuType : 'primary'"
              class="context-menu-item" 
              @click="menu.menuCallback"
         >
@@ -9,6 +10,7 @@
             </el-icon>
             <span class="menu-name">{{ menu.menuName }}</span>
         </div>
+
     </div>
 </template>
 
@@ -142,21 +144,31 @@ defineExpose({
         cursor: pointer;
         padding: 5px 10px;
 
-        &:hover {
-            background-color: #ecf5ff;
+        &[type=danger] { 
+            color: var(--el-color-danger);
         }
+
+        &[type=primary]:hover {
+            color: var(--el-color-primary);
+            background-color: var(--el-color-primary-light-9);
+        }
+        &[type=danger]:hover { 
+            background-color: var(--el-color-danger-light-9);
+        }
+
         &:hover:first-child {
-            border-radius: 6px 6px 0 0;
+            border-top-left-radius: 6px;
+            border-bottom-left-radius: 6px;
         }
         &:hover:last-child {
-            border-radius: 0 0 6px 6px;
+            border-top-right-radius: 6px;
+            border-bottom-right-radius: 6px;
         }
     }
     .menu-name {
         padding-left: 5px;
         line-break: 30px;
         font-size: 12px;
-        color: #666;
     }
 }
 </style>
