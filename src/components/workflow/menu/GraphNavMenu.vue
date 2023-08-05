@@ -80,8 +80,11 @@ defineExpose({
     top: 10px;
     left: 10px;
 
+    display: flex;
+    flex-direction: column;
+
     .el-button-group:not(:first-child) {
-        margin-left: 10px;
+        margin-top: 10px;
     }
 
     .el-button {
