@@ -1,6 +1,6 @@
 <template>
     <div class="context-menu" :style="menuStyle" v-if="visible">
-        <div v-for="menu in menus" :key="menu.menuId"
+        <div v-for="menu in menusVisible" :key="menu.menuId"
              class="context-menu-item" 
              @click="menu.menuCallback"
         >
@@ -31,6 +31,8 @@ const visible = ref(false);
 
 // 菜单项
 const menus = ref<MenuItem[]>([]);
+const menusOnce = ref<MenuItem[] | undefined>();
+const menusVisible = computed(() => menusOnce.value ? menusOnce.value : menus.value)
 
 // 坐标，在页面视图中的坐标
 const position = ref({
@@ -58,6 +60,19 @@ function showContextMenu(pos: {x: number, y: number}, menuItems: MenuItem[] | un
     if (menuItems) {
         menus.value = menuItems;
     }
+    menusOnce.value = undefined;
+    position.value = { ...pos }
+    visible.value = true;
+}
+
+
+/**
+ * 展示上下文菜单，仅按照指定菜单项展示一次，菜单隐藏后恢复之前设置的菜单项。
+ * @param pos 菜单位置，相对于页面左上角的位置
+ * @param menuItems 菜单项，不传则不更新菜单项
+ */
+function showContextMenuOnce(pos: {x: number, y: number}, menuItems: MenuItem[]) {
+    menusOnce.value = menuItems;
     position.value = { ...pos }
     visible.value = true;
 }
@@ -71,23 +86,10 @@ function hideContextMenu(menuItems: MenuItem[] | undefined) {
     if (menuItems) {
         menus.value = menuItems;
     }
+    menusOnce.value = undefined;
     visible.value = false;
 }
 
-
-/**
- * 设置菜单是否可见
- */
-function setVisible(v: boolean) {
-    visible.value = v;
-}
-
-/**
- * 更新坐标，在页面视图中的坐标
- */ 
-function setPosition(pos: {x: number, y: number}) {
-    position.value = { ...pos }
-}
 
 /**
  * 获取坐标，在页面视图中的坐标
@@ -118,6 +120,7 @@ defineExpose({
     setPositionInGraph,
     getPositionInGraph,
     showContextMenu,
+    showContextMenuOnce,
     hideContextMenu,
 });
 

@@ -15,7 +15,6 @@ export function useBlankContextMenu(params: MenuIntegerationArgs) {
     onMounted(() => {
         // 鼠标右键，菜单出现
         x6GraphRef.value?.on('blank:contextmenu', ({ e, x, y}) => {
-            console.log('画布右键单机', e, x, y);
             const contextMenu = contextMenuRef.value;
             if (!contextMenu) {
                 return;

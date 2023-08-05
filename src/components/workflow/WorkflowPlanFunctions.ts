@@ -67,3 +67,28 @@ export function addChild(plan: PlanDTO, parentJobId: string, childJobId: string)
         console.log(`作业 ${child.id} 添加到 ${parent.id} 的子节点`)
     }
 }
+
+
+/**
+ * 将子作业从父作业下移除
+ * @param plan DAG 任务
+ * @param parentJobId 父作业 ID
+ * @param childJobId 子作业 ID
+ */
+export function removeChild(plan: PlanDTO, parentJobId: string, childJobId: string) {
+    let parent!: WorkflowJobDTO;
+    let child!: WorkflowJobDTO;
+    plan.workflow?.forEach(job => {
+        if (job.id === parentJobId) {
+            parent = job;
+        }
+        if (job.id === childJobId) {
+            child = job;
+        }
+    });
+
+    if (parent && parent.children && child) {
+        parent.children.splice(parent.children.indexOf(child?.id))
+        console.log(`作业 ${child.id} 从 ${parent.id} 的子节点移除`)
+    }
+}
