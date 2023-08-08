@@ -70,7 +70,7 @@ export function copyJob(plan: PlanDTO, jobId: string): WorkflowJobDTO {
 
 
 /**
- * 更新作业，有则更新，无则新增
+ * 更新作业
  * @param plan DAG 任务
  * @param newJob 新作业数据
  */

@@ -43,6 +43,7 @@
 import JobAttrComponent from '@/components/plan/JobAttrComponent.vue'
 import RetryOptionComponent from '@/components/plan/RetryOptionComponent.vue'
 import DispatchOptionComponent from '@/components/plan/DispatchOptionComponent.vue'
+import { JobTypeEnum, LoadBalanceTypeEnum, TriggerTypeEnum } from '@/types/console-enums';
 import { WorkflowJobDTO } from "@/types/swagger-ts-api";
 import { readonly, ref } from "vue";
 import { ElMessageBox } from 'element-plus';

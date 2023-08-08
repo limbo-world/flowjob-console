@@ -68,8 +68,8 @@ export class LoadBalanceTypeEnum {
     public static ROUND_ROBIN: Label = {key: "ROUND_ROBIN", label: '轮询', value: 2};
     public static APPOINT: Label = {key: "APPOINT", label: '指定节点', value: 3};
     public static LEAST_FREQUENTLY_USED: Label = {key: "LEAST_FREQUENTLY_USED", label: '最不经常使用', value: 4};
-    public static LEAST_RECENTLY_USED: Label = {key: "LEAST_RECENTLY_USED", label: '最近最少使用', value: 4};
-    public static CONSISTENT_HASH: Label = {key: "CONSISTENT_HASH", label: '一致性hash', value: 4};
+    public static LEAST_RECENTLY_USED: Label = {key: "LEAST_RECENTLY_USED", label: '最近最少使用', value: 5};
+    public static CONSISTENT_HASH: Label = {key: "CONSISTENT_HASH", label: '一致性hash', value: 6};
 
     private static valMap: Map<string, Label>;
 

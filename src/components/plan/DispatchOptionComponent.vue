@@ -1,7 +1,7 @@
 <template>
   <el-form-item label="负载方式" :label-width="labelWidth">
     <el-radio-group v-model="option.loadBalanceType" class="ml-4" @change="onChange" :disabled="disabled">
-      <el-radio v-for="item in LoadBalanceTypeEnum.getArr()" :label="item.value">{{ item.label }}</el-radio>
+      <el-radio v-for="item in LoadBalanceTypeEnum.getArr()" :key="item.value" :label="item.value">{{ item.label }}</el-radio>
     </el-radio-group>
   </el-form-item>
   <el-form-item label="所需CPU数" :label-width="labelWidth">
