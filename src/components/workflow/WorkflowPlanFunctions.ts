@@ -1,5 +1,6 @@
 import { JobTypeEnum, LoadBalanceTypeEnum, TriggerTypeEnum } from "@/types/console-enums";
 import { PlanDTO, WorkflowJobDTO } from "@/types/swagger-ts-api";
+import { id } from "element-plus/es/locale";
 
 
 
@@ -10,7 +11,7 @@ import { PlanDTO, WorkflowJobDTO } from "@/types/swagger-ts-api";
  * @param postion 节点所在位置
  * @returns 新增的作业
  */
-export function addEmptyNode(plan: PlanDTO, postion: { x: number, y: number}): WorkflowJobDTO {
+export function addEmptyJob(plan: PlanDTO, postion: { x: number, y: number}): WorkflowJobDTO {
     const id = Date.now() + '';
     const job: WorkflowJobDTO = {
         type: JobTypeEnum.NORMAL.value,
@@ -41,6 +42,114 @@ export function addEmptyNode(plan: PlanDTO, postion: { x: number, y: number}): W
         h: 40
     });
     return job;
+}
+
+
+/**
+ * 复制作业节点
+ * @param plan DAG 任务
+ * @param jobId 被复制的作业 ID
+ */
+export function copyJob(plan: PlanDTO, jobId: string): WorkflowJobDTO {
+    const job = plan.workflow?.filter(j => j.id === jobId)[0] as WorkflowJobDTO;
+    const newJob = { ...job };
+    newJob.id = Date.now() + '';
+    newJob.children = [];
+    plan.workflow?.push(newJob);
+
+    const jobDagData = plan.dagData.nodes.get(jobId);
+    plan.dagData?.nodes.set(newJob.id, {
+        x: jobDagData?.x as number + 20,
+        y: jobDagData?.y as number + 20,
+        w: 180,
+        h: 40
+    });
+
+    return newJob;
+}
+
+
+/**
+ * 更新作业，有则更新，无则新增
+ * @param plan DAG 任务
+ * @param newJob 新作业数据
+ */
+export function updateJob(plan: PlanDTO, newJob: WorkflowJobDTO) {
+    const idx = plan.workflow?.findIndex(j => j.id === newJob.id) as number;
+    if (idx >= 0) {
+        plan.workflow?.splice(idx, 1, newJob);
+    } else {
+        plan.workflow?.push(newJob);
+    }
+}
+
+
+/**
+ * 删除作业节点
+ * @param plan DAG 任务
+ * @param jobId 被删除的作业 ID
+ */
+export function removeJob(plan: PlanDTO, jobId: string) {
+    // 移除作业节点
+    plan.workflow = plan.workflow?.filter(j => j.id !== jobId);
+    plan.dagData.nodes.delete(jobId);
+    // 从父节点移除子节点关联
+    plan.workflow?.forEach(job => {
+        const idx = job.children?.indexOf(jobId) as number;
+        if (idx < 0) {
+            return;
+        }
+        
+        job.children?.splice(idx);
+        console.log(`作业 ${jobId} 从 ${job.id} 的子节点移除`);
+    });
+}
+
+
+/**
+ * 删除某个作业的所有子作业
+ * @param plan DAG 任务
+ * @param jobId 被删除子作业的作业 ID
+ * @returns 
+ */
+export function removeChildJob(plan: PlanDTO, jobId: string): string[] {
+    // 先找到节点
+    const parentJob = plan.workflow?.filter(j => j.id === jobId)[0];
+    if (!parentJob || !parentJob.children) {
+        return [];
+    }
+
+    // 遍历子节点并移除
+    const children = [...parentJob.children];
+    return children.flatMap(childJobId => removeChildJobAndSelf(plan, childJobId));
+}
+
+
+/**
+ * 删除某个作业和其所有子作业
+ * @param plan DAG 任务
+ * @param jobId 被删除子作业的作业 ID
+ * @returns 
+ */
+function removeChildJobAndSelf(plan: PlanDTO, jobId: string): string[] {
+    // 先找到节点
+    const parentJob = plan.workflow?.filter(j => j.id === jobId)[0];
+    if (!parentJob) {
+        return [];
+    }
+
+    const removedJobIds = []
+
+    // 遍历子节点并移除
+    if (parentJob.children) {
+        parentJob.children?.forEach(childJobId => removeChildJobAndSelf(plan, childJobId).forEach(i => removedJobIds.push(i)));
+    }
+
+    // 移除当前节点
+    removeJob(plan, jobId);
+    removedJobIds.push(jobId);
+1
+    return removedJobIds;
 }
 
 
@@ -92,3 +201,4 @@ export function removeChild(plan: PlanDTO, parentJobId: string, childJobId: stri
         console.log(`作业 ${child.id} 从 ${parent.id} 的子节点移除`)
     }
 }
+

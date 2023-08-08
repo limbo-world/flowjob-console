@@ -10,7 +10,7 @@
     
     
 <script setup lang="ts">
-import { ref, inject, computed, toRef } from "vue";
+import { ref, inject, computed, toRef, onMounted } from "vue";
 import { Node } from '@antv/x6';
 
 const Images = {
@@ -25,22 +25,31 @@ const getNode = inject('getNode') as () => Node;
 
 interface NodeStatus {
     status: 'default' | 'success' | 'failed' | 'running'
-    label?: string
+    label: string
 }
 
-const nodeStatus = computed(() => {
-    const cnode = getNode() as Node;
-    return cnode.getData() as NodeStatus;
+const nodeStatus = ref<NodeStatus>({
+    status: 'default',
+    label: ''
 });
 
 const logoPath = ref(Images.logo);
 const statusImage = computed(() => {
-    const cnode = getNode() as Node;
-    const cnodeStatus = cnode.getData() as NodeStatus;
-    if (cnodeStatus.status === 'success') return Images.success;
-    if (cnodeStatus.status === 'failed') return Images.failed;
-    if (cnodeStatus.status === 'running') return Images.running;
+    if (nodeStatus.value.status === 'success') return Images.success;
+    if (nodeStatus.value.status === 'failed') return Images.failed;
+    if (nodeStatus.value.status === 'running') return Images.running;
     return "";
+});
+
+onMounted(() => {
+    // 初始化时取一次 data
+    const node = getNode() as Node;
+    nodeStatus.value = node.getData();
+
+    // 节点 data 更新时，同步变更到组件本地变量
+    node.on('change:data', () => {
+        nodeStatus.value = node.getData();
+    });
 });
 </script>
     

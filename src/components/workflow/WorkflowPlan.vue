@@ -6,6 +6,8 @@
 
         <graph-context-menu ref="contextMenuRef"></graph-context-menu>
         <graph-nav-menu ref="navMenuRef"></graph-nav-menu>
+
+        <workflow-drawer ref="drawerRef" @job-change="onJobUpdate"></workflow-drawer>
     </div>
 </template>
 
@@ -14,12 +16,14 @@
 import { computed, Ref, ref } from "vue";
 import { Graph } from "@antv/x6";
 import { PlanDagData, PlanDTO, WorkflowJobDTO } from "@/types/swagger-ts-api";
-import { useX6Graph, autoLayout, refreshDAGJobNodes } from "@/components/workflow/X6GraphIntergration";
+import { useX6Graph, autoLayout, refreshDAGJobNodes, updateDAGNode } from "@/components/workflow/X6GraphIntergration";
 
-import { useGraphContextMenu } from "./menu/GraphMenuIntergration";
 import GraphContextMenu from "./menu/GraphContextMenu.vue"
 import GraphNavMenu from './menu/GraphNavMenu.vue'
+import WorkflowDrawer from './drawer/WorkflowDrawer.vue'
 import { MenuIntegerationArgs } from "./menu/Menus";
+import { useGraphContextMenu } from "./menu/GraphMenuIntergration";
+import { updateJob } from "./WorkflowPlanFunctions";
 
 
 const plan: Ref<PlanDTO | undefined> = ref();
@@ -27,11 +31,13 @@ const x6ContainerId = computed<string>(() => 'x6Container_' + plan.value?.planId
 const { x6GraphRef } = useX6Graph(x6ContainerId.value, plan);
 const contextMenuRef = ref();
 const navMenuRef = ref();
+const drawerRef = ref();
 
 const menuIntergrationArgs: MenuIntegerationArgs = {
     x6GraphRef, 
     contextMenuRef, 
     navMenuRef,
+    drawerRef,
     planRef: plan
 };
 useGraphContextMenu(menuIntergrationArgs);
@@ -56,6 +62,25 @@ function updatePlan(p: PlanDTO) {
     (x6GraphRef?.value as Graph)?.centerContent();
 
     console.log(plan)
+}
+
+
+/**
+ * 作业编辑更新后，需更新作业、更新 DAG
+ */
+function onJobUpdate(job: WorkflowJobDTO) {
+    console.log('作业更新', job);
+
+    const planDTO = plan.value as PlanDTO;
+    const graph = x6GraphRef.value as Graph;
+    if (!planDTO || !graph) {
+        return;
+    }
+
+    updateJob(planDTO, job);
+    updateDAGNode(graph, [job]);
+
+    console.log('更新后', plan.value);
 }
 
 

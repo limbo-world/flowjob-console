@@ -4,7 +4,7 @@ import dagre from '@dagrejs/dagre'
 import DagNode from "@/components/workflow/JobNode.vue";
 import { Edge, Graph, Path, Node, Cell } from "@antv/x6";
 import { Selection } from "@antv/x6-plugin-selection";
-import { JobDTO, PlanDTO, PlanDagData, WorkflowJobDTO } from "@/types/swagger-ts-api";
+import { JobDTO, PlanDTO, PlanDagData, PlanDagNodeData, WorkflowJobDTO } from "@/types/swagger-ts-api";
 
 export function useX6Graph(graphContainerId: string, planRef: Ref<PlanDTO | undefined>) {
     console.log('x6 容器 ID ' + graphContainerId);
@@ -251,22 +251,7 @@ export function generateNodesAndEdges(x6Graph: Graph, dagData: PlanDagData, jobs
     // 先生成节点
     jobs?.forEach((job: WorkflowJobDTO) => {
         const nodeDagData = dagData?.nodes.get(job.id);
-        const jobNodeMeta = {
-            "id": job.id,
-            "shape": "dag-node",
-            "x": nodeDagData?.x || 0,
-            "y": nodeDagData?.y || 0,
-            "data": {
-                "label": job.name,
-                "status": "running"
-            },
-            "ports": [
-                {
-                    id: 'bottomPort',
-                    group: 'bottom'
-                }
-            ]
-        };
+        const jobNodeMeta = createNodeMetaByJob(job, nodeDagData);
         jobNodeMetas.push(jobNodeMeta);
         jobNodeMetaMap.set(job.id ? job.id : '', jobNodeMeta);
     });
@@ -323,7 +308,30 @@ export function generateNodesAndEdges(x6Graph: Graph, dagData: PlanDagData, jobs
 
 
 /**
- * 刷新作业的 DAG 节点
+ * 更新作业对应的 x6 节点，如果节点存在则更新，不存在则新增
+ * @param x6Graph x6 画布
+ * @param jobs 要更新的作业数据
+ */
+export function updateDAGNode(x6Graph: Graph, jobs: WorkflowJobDTO[]) {
+    jobs.forEach(job => {
+        const node = x6Graph.getCellById(job.id);
+        if (!node) {
+            const jobNodeMeta = createNodeMetaByJob(job);
+            x6Graph.addNode(jobNodeMeta);
+        } else {
+            node.setData({
+                "label": job.name,
+                "status": "running"
+            }, {
+                overwrite: true
+            });
+        }
+    });
+}
+
+
+/**
+ * 刷新全部作业 DAG 节点
  * @param x6Graph x6 画布
  * @param dagData 任务的 DAG 数据
  * @param jobs 作业列表
@@ -334,4 +342,30 @@ export function refreshDAGJobNodes(x6Graph: Graph, dagData: PlanDagData, jobs: W
     // 生成 x6 流程图的 Cell 元素，并重绘 x6 组件
     const cells: Cell[] = [ ...nodes, ...edges ];
     x6Graph.resetCells(cells);
+}
+
+
+/**
+ * 根据作业信息，生成 X6 节点
+ * @param job 作业
+ * @param nodeDagData 作业 DAG 数据
+ * @returns X6 节点
+ */
+function createNodeMetaByJob(job: WorkflowJobDTO, nodeDagData?: PlanDagNodeData) {
+    return {
+        "id": job.id,
+        "shape": "dag-node",
+        "x": nodeDagData?.x || 0,
+        "y": nodeDagData?.y || 0,
+        "data": {
+            "label": job.name,
+            "status": "running"
+        },
+        "ports": [
+            {
+                id: 'bottomPort',
+                group: 'bottom'
+            }
+        ]
+    };
 }

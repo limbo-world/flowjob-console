@@ -3,6 +3,7 @@ import { Graph } from "@antv/x6"
 import { ComponentPublicInstance, Ref } from "vue"
 import GraphContextMenu from "./GraphContextMenu.vue"
 import GraphNavMenu from "./GraphNavMenu.vue"
+import WorkfowDrawer from "../drawer/WorkflowDrawer.vue"
 import { ButtonType } from "element-plus"
 
 
@@ -34,5 +35,6 @@ export interface MenuIntegerationArgs {
     x6GraphRef: Ref<Graph | undefined>,
     contextMenuRef: Ref<ComponentPublicInstance<typeof GraphContextMenu>>,
     navMenuRef: Ref<ComponentPublicInstance<typeof GraphNavMenu>>,
+    drawerRef: Ref<ComponentPublicInstance<typeof WorkfowDrawer>>,
     planRef: Ref<PlanDTO | undefined>
 }

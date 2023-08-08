@@ -3,7 +3,7 @@ import { MenuItem, MenuIntegerationArgs } from "./Menus";
 import { autoLayout, generateNodesAndEdges } from "../X6GraphIntergration";
 import { Graph } from "@antv/x6";
 import { onMounted } from "vue";
-import { addEmptyNode } from "../WorkflowPlanFunctions";
+import { addEmptyJob } from "../WorkflowPlanFunctions";
 
 
 export function useBlankContextMenu(params: MenuIntegerationArgs) {
@@ -57,7 +57,7 @@ export function getDefaultContextMenuItems(params: MenuIntegerationArgs): MenuIt
             menuName: '新增节点',
             menuCallback: () => {
                 const plan = planRef?.value as PlanDTO;
-                const newJob = addEmptyNode(plan, contextMenuRef?.value.getPositionInGraph());
+                const newJob = addEmptyJob(plan, contextMenuRef?.value.getPositionInGraph());
                 const { nodes } = generateNodesAndEdges(x6GraphRef.value as Graph, plan.dagData, [newJob]);
                 x6GraphRef.value?.addNodes(nodes);
                 contextMenuRef.value?.hideContextMenu();
@@ -79,6 +79,7 @@ export function getDefaultContextMenuItems(params: MenuIntegerationArgs): MenuIt
             menuCallback: () => {
                 autoLayout(x6GraphRef?.value as Graph, planRef, 'TB');
                 contextMenuRef.value?.hideContextMenu();
+                // TODO 自适应布局后丢失节点选中状态，但边选中不会丢失，需要看看怎么处理
             }
         },
     ];
