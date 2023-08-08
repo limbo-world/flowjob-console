@@ -1,5 +1,5 @@
 <template>
-  <el-form-item label="属性参数">
+  <el-form-item label="属性参数" :label-width="labelWidth">
     <el-table :data="attributeArr">
       <el-table-column label="键" align="center">
         <template #default="scope">
@@ -41,10 +41,15 @@ interface AttributeResult {
   [key: string]: any; // 动态属性
 }
 
-const props = defineProps<{ attributes: {}, disabled: boolean }>()
+const props = defineProps<{ 
+  attributes: {},
+  disabled: boolean,
+  labelWidth: string|number
+}>()
 
 let attributeArr = ref([] as Attribute[]);
 const attributes = toRef(props, "attributes");
+const labelWidth = toRef(props, "labelWidth");
 
 watch(attributes, (newVal, oldVal) => {
   console.log(newVal, oldVal)

@@ -2,7 +2,7 @@
     <el-drawer v-model="visible" size="60%" :show-close="false" :before-close="confirmSave">
         <el-form :model="job">
             
-            <el-form-item label="任务类型">
+            <el-form-item label="任务类型" label-width="100px">
                 <el-radio-group v-model="job.type" class="ml-4" :disabled="readOnly">
                     <el-radio v-for="item in JobTypeEnum.getArr()" :key="item.value" :label="item.value">
                         {{item.label}}
@@ -10,24 +10,24 @@
                 </el-radio-group>
             </el-form-item>
 
-            <el-form-item label="作业名称">
+            <el-form-item label="作业名称" label-width="100px">
                 <el-input v-model="job.name" :disabled="readOnly"/>
             </el-form-item>
 
-            <el-form-item label="执行器名称">
+            <el-form-item label="执行器名称" label-width="100px">
                 <el-input v-model="job.executorName" :disabled="readOnly"/>
             </el-form-item>
 
             <!-- 属性 -->
-            <JobAttrComponent :attributes="job.attributes" :disabled="readOnly"
+            <JobAttrComponent :attributes="job.attributes" :disabled="readOnly" label-width="100px"
                               @onChange="(v) => job.attributes = v"/>
 
             <!-- 重试 -->
-            <RetryOptionComponent :job-type="job.type" :option="job.retryOption" 
+            <RetryOptionComponent :job-type="job.type" :option="job.retryOption" label-width="100px"
                                 :disabled="readOnly" @onChange="v => job.retryOption = v"/>
 
             <!-- 负载 -->
-            <DispatchOptionComponent :option="job.dispatchOption" :disabled="readOnly" 
+            <DispatchOptionComponent :option="job.dispatchOption" :disabled="readOnly" label-width="100px"
                                     @onChange="v => job.dispatchOption = v"/>
 
             <el-form-item>
@@ -43,11 +43,9 @@
 import JobAttrComponent from '@/components/plan/JobAttrComponent.vue'
 import RetryOptionComponent from '@/components/plan/RetryOptionComponent.vue'
 import DispatchOptionComponent from '@/components/plan/DispatchOptionComponent.vue'
-import { JobTypeEnum, LoadBalanceTypeEnum, TriggerTypeEnum } from '@/types/console-enums';
 import { WorkflowJobDTO } from "@/types/swagger-ts-api";
 import { readonly, ref } from "vue";
 import { ElMessageBox } from 'element-plus';
-import func from '../../../../vue-temp/vue-editor-bridge';
 
 
 const visible = ref(false);
@@ -80,9 +78,18 @@ function showDrawer(j: WorkflowJobDTO) {
  * 确认是否保存作业数据，不保存则继续处理，保存则触发作业变更事件，并关闭抽屉
  */
 function confirmSave(done: () => void) {
-    ElMessageBox.confirm('是否保存更新？')
-        .then(() => emits('jobChange', job.value as WorkflowJobDTO))
-        .finally(() => done());
+    ElMessageBox.confirm('是否保存更新？', { distinguishCancelAndClose: true })
+        .then(() => {
+            emits('jobChange', job.value as WorkflowJobDTO)
+            done();
+        })
+        .catch(action => {
+            if (action === 'close') {
+                return;
+            } else if (action === 'cancel') {
+                done()
+            }
+        });
 }
 
 

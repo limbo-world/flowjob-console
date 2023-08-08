@@ -1,16 +1,16 @@
 <template>
-  <el-form-item label="负载方式">
+  <el-form-item label="负载方式" :label-width="labelWidth">
     <el-radio-group v-model="option.loadBalanceType" class="ml-4" @change="onChange" :disabled="disabled">
       <el-radio v-for="item in LoadBalanceTypeEnum.getArr()" :label="item.value">{{ item.label }}</el-radio>
     </el-radio-group>
   </el-form-item>
-  <el-form-item label="所需CPU数">
+  <el-form-item label="所需CPU数" :label-width="labelWidth">
     <el-input v-model="option.cpuRequirement" @change="onChange" :disabled="disabled"/>
   </el-form-item>
-  <el-form-item label="所需内存大小">
+  <el-form-item label="所需内存大小" :label-width="labelWidth">
     <el-input v-model="option.ramRequirement" @change="onChange" :disabled="disabled"/>
   </el-form-item>
-  <el-form-item label="标签">
+  <el-form-item label="过滤标签" :label-width="labelWidth">
     <el-table :data="option.tagFilters">
       <el-table-column label="键" align="center">
         <template #default="scope">
@@ -65,9 +65,14 @@ interface DispatchOption {
   tagFilters?: Array<TagFilter>
 }
 
-const props = defineProps<{ option: DispatchOption, disabled: boolean }>()
+const props = defineProps<{ 
+  option: DispatchOption, 
+  disabled: boolean,
+  labelWidth: string | number
+}>()
 
 let option = toRef(props, "option")
+const labelWidth = toRef(props, "labelWidth");
 
 const emit = defineEmits<{ (e: 'onChange', val: DispatchOption): void }>()
 
@@ -89,3 +94,10 @@ const removeTagFilterRow = (idx: number) => {
 }
 
 </script>
+
+
+<style lang="scss">
+.el-form-item__label {
+  font-weight: 700;
+}
+</style>
