@@ -76,102 +76,99 @@ export function useX6Graph(graphContainerId: string, planRef: Ref<PlanDTO | unde
         )
     }, true,)
 
-
-    // 声明 x6 画布，并在组件创建后初始化
-    const x6GraphRef = ref<Graph>();
-    onMounted(() => {
-        // 初始化 x6 画布
-        x6GraphRef.value = new Graph({
-            container: document.getElementById(graphContainerId)!,
-            panning: {
-                enabled: true,
-                eventTypes: ['leftMouseDown', 'mouseWheel'],
-            },
-            mousewheel: {
-                enabled: true,
-                modifiers: 'ctrl',
-                factor: 1.1,
-                maxScale: 1.5,
-                minScale: 0.5,
-            },
-            highlighting: {
-                magnetAdsorbed: {
-                    name: 'stroke',
-                    args: {
-                        attrs: {
-                            fill: '#fff',
-                            stroke: '#31d0c6',
-                            strokeWidth: 4,
-                        },
+    // 初始化 x6 画布
+    const x6Graph: Graph = new Graph({
+        container: document.getElementById(graphContainerId)!,
+        panning: {
+            enabled: true,
+            eventTypes: ['leftMouseDown', 'mouseWheel'],
+        },
+        mousewheel: {
+            enabled: true,
+            modifiers: 'ctrl',
+            factor: 1.1,
+            maxScale: 1.5,
+            minScale: 0.5,
+        },
+        highlighting: {
+            magnetAdsorbed: {
+                name: 'stroke',
+                args: {
+                    attrs: {
+                        fill: '#fff',
+                        stroke: '#31d0c6',
+                        strokeWidth: 4,
                     },
                 },
             },
-            connecting: {
-                snap: true,
-                allowBlank: false,
-                allowLoop: false,
-                highlight: true,
-                connector: 'algo-connector',
-                connectionPoint: 'anchor',
-                anchor: 'center',
-                validateMagnet({ magnet }) {
-                    return magnet.getAttribute('port-group') !== 'top'
-                },
-                createEdge() {
-                    return x6GraphRef.value?.createEdge({
-                        shape: 'dag-edge',
-                        attrs: {
-                            line: {
-                                strokeDasharray: '5 5',
-                            },
+        },
+        connecting: {
+            snap: true,
+            allowBlank: false,
+            allowLoop: false,
+            highlight: true,
+            connector: 'algo-connector',
+            connectionPoint: 'anchor',
+            anchor: 'center',
+            validateMagnet({ magnet }) {
+                return magnet.getAttribute('port-group') !== 'top'
+            },
+            createEdge() {
+                return x6Graph.createEdge({
+                    shape: 'dag-edge',
+                    attrs: {
+                        line: {
+                            strokeDasharray: '5 5',
                         },
-                        zIndex: -1,
-                    })
-                },
+                    },
+                    zIndex: -1,
+                })
+            },
+        }
+    });
+
+
+    // 启用 x6 功能
+    x6Graph.use(new Selection({
+        enabled: true,
+        multiple: true,
+        rubberEdge: true,
+        rubberNode: true,
+        modifiers: 'shift',
+        rubberband: true,
+    }));
+
+    // 节点连接时的回调
+    x6Graph.on('edge:connected', ({ edge }) => {
+        edge.attr({
+            line: {
+                strokeDasharray: '',
+            },
+        })
+    });
+
+    // 节点数据改变时的回调
+    x6Graph.on('node:change:data', ({ node }) => {
+        const edges = x6Graph.getIncomingEdges(node)
+        const { status } = node.getData() as NodeStatus
+        edges?.forEach((edge) => {
+            if (status === 'running') {
+                edge.attr('line/strokeDasharray', 5)
+                edge.attr('line/style/animation', 'running-line 30s infinite linear')
+            } else {
+                edge.attr('line/strokeDasharray', '')
+                edge.attr('line/style/animation', '')
             }
-        });
+        })
+    });
+    
+    x6Graph.on('node:click', (e) => console.log('node click', e))
+    x6Graph.on('cell:click', (e) => console.log('cell click', e))
+    
 
-        // 启用 x6 功能
-        x6GraphRef.value.use(new Selection({
-            enabled: true,
-            multiple: true,
-            rubberEdge: true,
-            rubberNode: true,
-            modifiers: 'shift',
-            rubberband: true,
-        }));
-
-        // 节点连接时的回调
-        x6GraphRef.value.on('edge:connected', ({ edge }) => {
-            edge.attr({
-                line: {
-                    strokeDasharray: '',
-                },
-            })
-        });
-
-        // 节点数据改变时的回调
-        x6GraphRef.value.on('node:change:data', ({ node }) => {
-            const edges = x6GraphRef.value?.getIncomingEdges(node)
-            const { status } = node.getData() as NodeStatus
-            edges?.forEach((edge) => {
-                if (status === 'running') {
-                    edge.attr('line/strokeDasharray', 5)
-                    edge.attr('line/style/animation', 'running-line 30s infinite linear')
-                } else {
-                    edge.attr('line/strokeDasharray', '')
-                    edge.attr('line/style/animation', '')
-                }
-            })
-        });
-        
-        x6GraphRef.value?.on('node:click', (e) => console.log('node click', e))
-        x6GraphRef.value?.on('cell:click', (e) => console.log('cell click', e))
-        
-    })
 
     return {
-        x6GraphRef
+        x6Graph
     }
 }
 

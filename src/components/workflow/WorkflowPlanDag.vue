@@ -1,8 +1,7 @@
 <template>
 
     <div class="workerflow-plan-dag">
-        <div :id="x6ContainerId" class="workflow-x6-container">
-        </div>
+        <div :id="x6ContainerId" class="workflow-x6-container"></div>
 
         <graph-context-menu ref="contextMenuRef"></graph-context-menu>
         <graph-nav-menu ref="navMenuRef"></graph-nav-menu>
@@ -13,7 +12,7 @@
 
 
 <script setup lang="ts">
-import { computed, Ref, ref } from "vue";
+import { onMounted, Ref, ref, toRef, watch } from "vue";
 import { Graph } from "@antv/x6";
 import { PlanDagData, PlanDTO, WorkflowJobDTO } from "@/types/swagger-ts-api";
 import { useX6Graph, autoLayout, refreshDAGJobNodes, updateDAGNode } from "@/components/workflow/X6GraphIntergration";
@@ -21,47 +20,83 @@ import { useX6Graph, autoLayout, refreshDAGJobNodes, updateDAGNode } from "@/com
 import GraphContextMenu from "./menu/GraphContextMenu.vue"
 import GraphNavMenu from './menu/GraphNavMenu.vue'
 import WorkflowDrawer from './drawer/WorkflowDrawer.vue'
-import { MenuIntegerationArgs } from "./menu/Menus";
-import { useGraphContextMenu } from "./menu/GraphMenuIntergration";
+import { X6GraphControlIntegerationArgs } from "./menu/Menus";
+import { initX6GraphControl } from "./X6GraphControlIntergration";
 import { updateJob } from "./WorkflowPlanFunctions";
 
 
+
+// v-model:plan
 const plan: Ref<PlanDTO | undefined> = ref();
-const x6ContainerId = computed<string>(() => 'x6Container_' + plan.value?.planId);
-const { x6GraphRef } = useX6Graph(x6ContainerId.value, plan);
+const emitPlanUpdate = defineEmits<{
+    (e: 'onPlanUpdate', val: PlanDTO): void
+}>();
+watch(plan, (newValue, oldValue) => {
+    console.log('plan 更新', newValue, oldValue);
+    if (newValue) {
+        emitPlanUpdate('onPlanUpdate', newValue);
+    }
+}, { deep: true })
+
+const mounted = ref(false);
+const x6ContainerId = ref(`x6Container_${Date.now()}`);
+const x6GraphRef = ref<Graph>();
 const contextMenuRef = ref();
 const navMenuRef = ref();
 const drawerRef = ref();
 
-const menuIntergrationArgs: MenuIntegerationArgs = {
-    x6GraphRef, 
-    contextMenuRef, 
-    navMenuRef,
-    drawerRef,
-    planRef: plan
-};
-useGraphContextMenu(menuIntergrationArgs);
+
+onMounted(() => {
+    mounted.value = true;
+    initX6();
+});
+
+
+/**
+ * 初始化 x6 画布
+ */
+function initX6() {
+    if (!mounted.value || !plan.value) {
+        return;
+    }
+
+    // 防止重复初始化
+    if (!x6GraphRef.value) {
+        const { x6Graph } = useX6Graph(x6ContainerId.value, plan);
+        x6GraphRef.value = x6Graph;
+    }
+
+    // 刷新 DAG
+    console.log('刷新 DAG 视图');
+    refreshDAGJobNodes(
+        x6GraphRef.value,
+        plan.value?.dagData as PlanDagData,
+        plan.value?.workflow as WorkflowJobDTO[]
+    );
+
+    // 自适应布局 & 居中
+    autoLayout(x6GraphRef.value, plan, 'TB');  
+    x6GraphRef.value.centerContent();
+
+    // 注册 x6 控制器
+    initX6GraphControl({
+        x6GraphRef, 
+        contextMenuRef, 
+        navMenuRef,
+        drawerRef,
+        planRef: plan
+    });
+}
 
 
 /**
  * 更新任务
  */
-function updatePlan(p: PlanDTO) {
-    // 为数据赋值
-    plan.value = p;
-
-    // 刷新 DAG
-    refreshDAGJobNodes(
-        x6GraphRef.value as Graph,
-        plan.value.dagData as PlanDagData,
-        plan.value.workflow as WorkflowJobDTO[]
-    );
-
-    // 自适应布局
-    autoLayout(x6GraphRef?.value as Graph, plan, 'TB');  
-    (x6GraphRef?.value as Graph)?.centerContent();
-
-    console.log(plan)
+function refresh(p: PlanDTO) {
+    if (p) {
+        plan.value = p;
+    }
+    initX6();
 }
 
 
@@ -84,18 +119,9 @@ function onJobUpdate(job: WorkflowJobDTO) {
 }
 
 
-/**
- * 获取任务
- */
-function getPlan(): PlanDTO {
-    return plan.value as PlanDTO;
-}
-
-
 // 组件对外暴露的函数
 defineExpose({
-    updatePlan,
-    getPlan
+    refresh
 })
 </script>
 
@@ -104,7 +130,10 @@ defineExpose({
 
 .workerflow-plan-dag {
     position: relative;
-    height: 100%;
+    width: 100%;
+    height: 400px;
+    border: 1px solid var(--el-border-color);
+    border-radius: var(--el-border-radius-base);
 }
 
 .workflow-x6-container {
@@ -187,4 +216,4 @@ defineExpose({
         }
     }
 }
-</style>./menu/GraphContextMenuIntergration./EdgeMenuIntergration./menu/GraphMenuIntergration
+</style>./menu/GraphContextMenuIntergration./EdgeMenuIntergration./menu/GraphMenuIntergration./menu/X6GraphControlIntergration

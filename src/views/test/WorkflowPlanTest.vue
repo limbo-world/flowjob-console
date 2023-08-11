@@ -1,10 +1,10 @@
 <template>
-    <workflow-plan ref="workflowPlanComponent"></workflow-plan>
+    <workflow-plan-dag ref="workflowPlanComponent" v-model:plan="plan"></workflow-plan-dag>
 </template>
 
 <script lang="ts" setup>
 
-import WorkflowPlan from '@/components/workflow/WorkflowPlan.vue';
+import WorkflowPlanDag from '@/components/workflow/WorkflowPlanDag.vue';
 import { PlanDTO } from "@/types/swagger-ts-api";
 import { PlanTypeEnum } from "@/types/console-enums";
 import { onMounted, Ref, ref } from 'vue';
@@ -131,13 +131,12 @@ const plan: PlanDTO = {
     currentVersion: '1',
     recentlyVersion: '2',
     dagData: {
-        nodes: new Map(),
-        edges: new Map()
+        nodes: new Map()
     }
 }
 
 const workflowPlanComponent = ref();
 
-onMounted(() => workflowPlanComponent.value.updatePlan(plan));
+// onMounted(() => workflowPlanComponent.value.refresh());
 
 </script>

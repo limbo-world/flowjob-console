@@ -31,7 +31,7 @@ export interface MenuItemGroup {
 /**
  * 集成菜单功能时的参数
  */
-export interface MenuIntegerationArgs {
+export interface X6GraphControlIntegerationArgs {
     x6GraphRef: Ref<Graph | undefined>,
     contextMenuRef: Ref<ComponentPublicInstance<typeof GraphContextMenu>>,
     navMenuRef: Ref<ComponentPublicInstance<typeof GraphNavMenu>>,

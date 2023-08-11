@@ -1,41 +1,39 @@
 import { PlanDTO } from "@/types/swagger-ts-api";
-import { MenuItem, MenuIntegerationArgs } from "./Menus";
+import { MenuItem, X6GraphControlIntegerationArgs } from "./Menus";
 import { autoLayout, generateNodesAndEdges } from "../X6GraphIntergration";
 import { Graph } from "@antv/x6";
 import { onMounted } from "vue";
 import { addEmptyJob } from "../WorkflowPlanFunctions";
 
 
-export function useBlankContextMenu(params: MenuIntegerationArgs) {
+export function initBlankContextMenu(params: X6GraphControlIntegerationArgs) {
 
     // 参数展开
     const { x6GraphRef, contextMenuRef, navMenuRef, planRef } = params;
     const contextMenuItems = getDefaultContextMenuItems(params);
 
-    onMounted(() => {
-        // 鼠标右键，菜单出现
-        x6GraphRef.value?.on('blank:contextmenu', ({ e, x, y}) => {
-            const contextMenu = contextMenuRef.value;
-            if (!contextMenu) {
-                return;
-            }
+    // 鼠标右键，菜单出现
+    x6GraphRef.value?.on('blank:contextmenu', ({ e, x, y}) => {
+        const contextMenu = contextMenuRef.value;
+        if (!contextMenu) {
+            return;
+        }
 
-            contextMenu.showContextMenu({x: e.clientX, y: e.clientY}, contextMenuItems);
-            contextMenu.setPositionInGraph({x, y});
-        });
+        contextMenu.showContextMenu({x: e.clientX, y: e.clientY}, contextMenuItems);
+        contextMenu.setPositionInGraph({x, y});
+    });
 
-        // 注册其他事件：关闭菜单
-        const closeMenuEvents = [
-            'cell:mousedown',
-            'node:mousedown',
-            'node:port:mousedown',
-            'edge:mousedown',
-            'blank:mousedown'
-        ];
-        closeMenuEvents.forEach(e => x6GraphRef.value?.on(e, () => {
-            contextMenuRef.value?.hideContextMenu();
-        }));
-    })
+    // 注册其他事件：关闭菜单
+    const closeMenuEvents = [
+        'cell:mousedown',
+        'node:mousedown',
+        'node:port:mousedown',
+        'edge:mousedown',
+        'blank:mousedown'
+    ];
+    closeMenuEvents.forEach(e => x6GraphRef.value?.on(e, () => {
+        contextMenuRef.value?.hideContextMenu();
+    }));
 
 }
 
@@ -45,7 +43,7 @@ export function useBlankContextMenu(params: MenuIntegerationArgs) {
  * @param params 菜单集成参数
  * @returns 
  */
-export function getDefaultContextMenuItems(params: MenuIntegerationArgs): MenuItem[] {
+export function getDefaultContextMenuItems(params: X6GraphControlIntegerationArgs): MenuItem[] {
     
     // 参数展开
     const { x6GraphRef, contextMenuRef, planRef } = params;

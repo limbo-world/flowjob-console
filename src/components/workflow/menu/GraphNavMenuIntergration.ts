@@ -1,21 +1,14 @@
 import { onMounted, toRefs } from "vue";
 import { getDefaultContextMenuItems } from "./BlankContextMenuIntergration";
-import { MenuIntegerationArgs } from "./Menus";
+import { X6GraphControlIntegerationArgs } from "./Menus";
 
-export function useGraphNavMenu(params: MenuIntegerationArgs) {
-
+export function initGraphNavMenu(params: X6GraphControlIntegerationArgs) {
     const { navMenuRef } = params;
     const contextMenuItems = getDefaultContextMenuItems(params);
 
-    onMounted(() => {
-        // 设置导航菜单
-        navMenuRef.value.updateMenus([{
-            groupId: 'default',
-            menus: contextMenuItems
-        }]);
-    });
-
-    return toRefs({
-        contextMenuItems
-    })
+    // 设置导航菜单
+    navMenuRef.value.updateMenus([{
+        groupId: 'default',
+        menus: contextMenuItems
+    }]);
 }

@@ -79,9 +79,14 @@ onMounted(() => {
     margin-left: 8px;
     color: #666;
     font-size: 12px;
+
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
 }
 .node .status {
     flex-shrink: 0;
+    display: flex;
 }
 .node.success {
     border-left: 4px solid #52c41a;

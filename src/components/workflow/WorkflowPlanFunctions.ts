@@ -1,8 +1,58 @@
-import { JobTypeEnum, LoadBalanceTypeEnum, TriggerTypeEnum } from "@/types/console-enums";
+import { JobTypeEnum, LoadBalanceTypeEnum, PlanTypeEnum, ScheduleTypeEnum, TriggerTypeEnum } from "@/types/console-enums";
 import { PlanDTO, WorkflowJobDTO } from "@/types/swagger-ts-api";
-import { id } from "element-plus/es/locale";
 
 
+/**
+ * 生成空白任务
+ */
+export function createEmptyPlan(): PlanDTO {
+    return  {
+        planId: 'plan_' + Date.now(),
+        name: '',
+        description: '',
+        planType: PlanTypeEnum.WORKFLOW.value,
+        triggerType: TriggerTypeEnum.SCHEDULE.value,
+        scheduleOption: {
+            scheduleType: ScheduleTypeEnum.FIXED_DELAY.value
+        },
+        workflow: [ createEmptyJob() ],
+        currentVersion: '1',
+        recentlyVersion: '1',
+        dagData: {
+            nodes: new Map()
+        }
+    };
+}
+
+
+/**
+ * 生成空白作业
+ * @param id 作业 ID，可以不传
+ * @returns 
+ */
+export function createEmptyJob(id?: string): WorkflowJobDTO {
+    return {
+        type: JobTypeEnum.NORMAL.value,
+        attributes: {},
+        retryOption: {
+            retry: 0,
+            retryInterval: 0
+        },
+        dispatchOption: {
+            loadBalanceType: LoadBalanceTypeEnum.ROUND_ROBIN.value,
+            cpuRequirement: 0,
+            ramRequirement: 0,
+            tagFilters: []
+        },
+        executorName: '',
+        id: id ? id : Date.now() + '',
+        name: '空白作业',
+        description: '',
+        children: [],
+        triggerType: TriggerTypeEnum.SCHEDULE.value,
+        continueWhenFail: false,
+    };
+}
 
 
 /**
@@ -12,31 +62,10 @@ import { id } from "element-plus/es/locale";
  * @returns 新增的作业
  */
 export function addEmptyJob(plan: PlanDTO, postion: { x: number, y: number}): WorkflowJobDTO {
-    const id = Date.now() + '';
-    const job: WorkflowJobDTO = {
-        type: JobTypeEnum.NORMAL.value,
-        attributes: {},
-        retryOption: {
-            retry: 0,
-            retryInterval: 0
-        },
-        dispatchOption: {
-            loadBalanceType: LoadBalanceTypeEnum.ROUND_ROBIN.value,
-            cpuRequirement: -1,
-            ramRequirement: -1,
-            tagFilters: []
-        },
-        executorName: '',
-        id: id,
-        name: '空白作业',
-        description: '',
-        children: [],
-        triggerType: TriggerTypeEnum.SCHEDULE.value,
-        continueWhenFail: false,
-    };
+    const job: WorkflowJobDTO = createEmptyJob();
 
     plan.workflow?.push(job);
-    plan.dagData?.nodes.set(id, {
+    plan.dagData?.nodes.set(job.id, {
         ...postion,
         w: 180,
         h: 40

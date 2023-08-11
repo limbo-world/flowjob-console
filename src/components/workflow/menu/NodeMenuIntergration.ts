@@ -1,5 +1,5 @@
 import { onMounted } from "vue";
-import { MenuIntegerationArgs } from "./Menus";
+import { X6GraphControlIntegerationArgs } from "./Menus";
 import { Graph, Node } from "@antv/x6";
 import { addChild, addEmptyJob, copyJob, removeChildJob, removeJob } from "../WorkflowPlanFunctions";
 import { PlanDTO, WorkflowJobDTO } from "@/types/swagger-ts-api";
@@ -7,56 +7,54 @@ import { autoLayout, generateNodesAndEdges } from "../X6GraphIntergration";
 
 
 
-export function useNodeMenu(params: MenuIntegerationArgs) {
+export function initNodeMenu(params: X6GraphControlIntegerationArgs) {
 
     const { planRef, x6GraphRef, navMenuRef, contextMenuRef, drawerRef } = params;
 
-
-    onMounted(() => {
-        // 节点单击事件
-        x6GraphRef.value?.on('node:click', ({e, node}) => {
-            // 展示导航菜单
-            const menuItems = getNodeMenuItems(node, params);
-            navMenuRef.value.addMenuGroup({
-                groupId: 'nodeMenus',
-                menus: menuItems
-            });
-
-            // 展示编辑抽屉
-            const job = planRef.value?.workflow?.find(j => j.id === node.id);
-            if (job) {
-                drawerRef.value.showDrawer(job);
-            }
+    // 节点单击事件
+    x6GraphRef.value?.on('node:click', ({e, node}) => {
+        // 展示导航菜单
+        const menuItems = getNodeMenuItems(node, params);
+        navMenuRef.value.addMenuGroup({
+            groupId: 'nodeMenus',
+            menus: menuItems
         });
 
-        // 节点右键事件
-        x6GraphRef.value?.on('node:contextmenu', ({e, node}) => {
-            // 展示右键菜单
-            const position = {x: e.clientX, y: e.clientY};
-            const menuItems = getNodeMenuItems(node, params);
-            contextMenuRef.value.showContextMenuOnce(position, menuItems);
-        })
-
-
-        // 注册其他左键单击事件：关闭导航菜单、右键菜单
-        const hideMenuEvents = [
-            'edge:click',
-            'node:port:click',
-            'blank:click',
-        ];
-        hideMenuEvents.forEach(e => x6GraphRef.value?.on(e, (ee: any) => {
-            navMenuRef.value.removeMenuGroup('nodeMenus');
-            contextMenuRef.value.hideContextMenu();
-        }));
-
-        x6GraphRef.value?.on('selection:changed', (e) => console.log('selection change', e))
+        // 展示编辑抽屉
+        const job = planRef.value?.workflow?.find(j => j.id === node.id);
+        if (job) {
+            drawerRef.value.showDrawer(job);
+        }
     });
+
+    // 节点右键事件
+    x6GraphRef.value?.on('node:contextmenu', ({e, node}) => {
+        // 展示右键菜单
+        const position = {x: e.clientX, y: e.clientY};
+        const menuItems = getNodeMenuItems(node, params);
+        contextMenuRef.value.showContextMenuOnce(position, menuItems);
+    })
+
+
+    // 注册其他左键单击事件：关闭导航菜单、右键菜单
+    const hideMenuEvents = [
+        'edge:click',
+        'node:port:click',
+        'blank:click',
+    ];
+    hideMenuEvents.forEach(e => x6GraphRef.value?.on(e, (ee: any) => {
+        navMenuRef.value.removeMenuGroup('nodeMenus');
+        contextMenuRef.value.hideContextMenu();
+    }));
+
+    x6GraphRef.value?.on('selection:changed', (e) => console.log('selection change', e))
+
 
 }
 
 
 
-function getNodeMenuItems(node: Node, args: MenuIntegerationArgs) {
+function getNodeMenuItems(node: Node, args: X6GraphControlIntegerationArgs) {
     // 参数展开
     const { x6GraphRef, planRef, navMenuRef, contextMenuRef } = args;
 
