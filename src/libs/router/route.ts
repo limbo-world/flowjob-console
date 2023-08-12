@@ -15,8 +15,8 @@ export default [
                 component: () => import("@/views/plan/PlanList.vue"),
             },
             {
-                path: '/normal-plan/edit',
-                component: () => import("@/views/plan/NormalPlanEdit.vue"),
+                path: '/standalone-plan/edit',
+                component: () => import("@/views/plan/StandalonePlanEdit.vue"),
             },
             {
                 path: '/workflow-plan/edit',

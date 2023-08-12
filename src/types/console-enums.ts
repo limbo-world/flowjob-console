@@ -7,9 +7,9 @@ export class PlanTypeEnum {
     public static UNKNOWN: Label = {label: '未知', value: 0};
 
     /**
-     * 普通任务
+     * 单例任务
      */
-    public static NORMAL: Label = {label: '普通任务', value: 1};
+    public static STANDALONE: Label = {label: '单例任务', value: 1};
 
     /**
      * 工作流任务
@@ -21,12 +21,12 @@ export class PlanTypeEnum {
     static {
         this.valMap = new Map<string, Label>();
         this.valMap.set(PlanTypeEnum.UNKNOWN.value, PlanTypeEnum.UNKNOWN);
-        this.valMap.set(PlanTypeEnum.NORMAL.value, PlanTypeEnum.NORMAL);
+        this.valMap.set(PlanTypeEnum.STANDALONE.value, PlanTypeEnum.STANDALONE);
         this.valMap.set(PlanTypeEnum.WORKFLOW.value, PlanTypeEnum.WORKFLOW);
     }
 
     static getArr(): Array<Label> {
-        return [PlanTypeEnum.NORMAL, PlanTypeEnum.WORKFLOW];
+        return [PlanTypeEnum.STANDALONE, PlanTypeEnum.WORKFLOW];
     }
 
     static getByValue(val:string): Label {
@@ -37,8 +37,8 @@ export class PlanTypeEnum {
 
 export class JobTypeEnum {
     public static UNKNOWN: Label = {label: '未知', value: 0};
-    public static NORMAL: Label = {label: '普通类型', value: 1};
-    public static BROADCAST: Label = {label: '广播类型', value: 2};
+    public static STANDALONE: Label = {label: '单机任务', value: 1};
+    public static BROADCAST: Label = {label: '广播任务', value: 2};
     public static MAP: Label = {label: 'Map任务', value: 3};
     public static MAP_REDUCE: Label = {label: 'MapReduce任务', value: 4};
 
@@ -47,14 +47,14 @@ export class JobTypeEnum {
     static {
         this.valMap = new Map<string, Label>();
         this.valMap.set(JobTypeEnum.UNKNOWN.value, JobTypeEnum.UNKNOWN);
-        this.valMap.set(JobTypeEnum.NORMAL.value, JobTypeEnum.NORMAL);
+        this.valMap.set(JobTypeEnum.STANDALONE.value, JobTypeEnum.STANDALONE);
         this.valMap.set(JobTypeEnum.BROADCAST.value, JobTypeEnum.BROADCAST);
         this.valMap.set(JobTypeEnum.MAP.value, JobTypeEnum.MAP);
         this.valMap.set(JobTypeEnum.MAP_REDUCE.value, JobTypeEnum.MAP_REDUCE);
     }
 
     static getArr(): Array<Label> {
-        return [JobTypeEnum.NORMAL, JobTypeEnum.BROADCAST, JobTypeEnum.MAP, JobTypeEnum.MAP_REDUCE];
+        return [JobTypeEnum.STANDALONE, JobTypeEnum.BROADCAST, JobTypeEnum.MAP, JobTypeEnum.MAP_REDUCE];
     }
 
     static getByValue(val:string): Label {
@@ -326,7 +326,7 @@ export class TaskStatusEnum {
 
 export class TaskTypeEnum {
     public static UNKNOWN: Label = {label: '未知', value: 0};
-    public static NORMAL: Label = {label: '普通任务', value: 1};
+    public static STANDALONE: Label = {label: '单机任务', value: 1};
     public static BROADCAST: Label = {label: '广播任务', value: 2};
     public static SPLIT: Label = {label: '分片任务', value: 3};
     public static MAP: Label = {label: 'Map任务', value: 4};
@@ -336,7 +336,7 @@ export class TaskTypeEnum {
     static {
         this.valMap = new Map<string, Label>();
         this.valMap.set(TaskTypeEnum.UNKNOWN.value, TaskTypeEnum.UNKNOWN);
-        this.valMap.set(TaskTypeEnum.NORMAL.value, TaskTypeEnum.NORMAL);
+        this.valMap.set(TaskTypeEnum.STANDALONE.value, TaskTypeEnum.STANDALONE);
         this.valMap.set(TaskTypeEnum.BROADCAST.value, TaskTypeEnum.BROADCAST);
         this.valMap.set(TaskTypeEnum.SPLIT.value, TaskTypeEnum.SPLIT);
         this.valMap.set(TaskTypeEnum.MAP.value, TaskTypeEnum.MAP);
@@ -344,7 +344,7 @@ export class TaskTypeEnum {
     }
 
     static getArr(): Array<Label> {
-        return [TaskTypeEnum.NORMAL, TaskTypeEnum.BROADCAST, TaskTypeEnum.SPLIT, TaskTypeEnum.MAP, TaskTypeEnum.REDUCE];
+        return [TaskTypeEnum.STANDALONE, TaskTypeEnum.BROADCAST, TaskTypeEnum.SPLIT, TaskTypeEnum.MAP, TaskTypeEnum.REDUCE];
     }
 
     static getByValue(val:string): Label {

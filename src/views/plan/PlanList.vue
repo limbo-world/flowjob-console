@@ -168,8 +168,8 @@ const changeEnable = (planId: any, enable: any) => {
 
 // 跳转到详情
 const toPlanInfo = (planId: string, planType: number, edit: any) => {
-  if (PlanTypeEnum.NORMAL.value === planType) {
-    router.push({path: '/normal-plan/edit',
+  if (PlanTypeEnum.STANDALONE.value === planType) {
+    router.push({path: '/standalone-plan/edit',
       query: {planId: planId, edit: edit}
     })
   } else if (PlanTypeEnum.WORKFLOW.value === planType) {

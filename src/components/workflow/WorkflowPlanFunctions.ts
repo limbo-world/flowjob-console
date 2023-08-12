@@ -32,7 +32,7 @@ export function createEmptyPlan(): PlanDTO {
  */
 export function createEmptyJob(id?: string): WorkflowJobDTO {
     return {
-        type: JobTypeEnum.NORMAL.value,
+        type: JobTypeEnum.STANDALONE.value,
         attributes: {},
         retryOption: {
             retry: 0,
