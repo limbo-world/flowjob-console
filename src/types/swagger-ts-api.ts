@@ -669,7 +669,12 @@ export interface ScheduleOptionDTO {
    * 调度开始时间
    * @format date-time
    */
-  scheduleStartAt?: string;
+  scheduleStartAt: string;
+  /**
+   * 调度结束时间
+   * @format date-time
+   */
+  scheduleEndAt: string;
   /**
    * 延迟时间
    * 延迟时间 -- 当前时间多久后调度

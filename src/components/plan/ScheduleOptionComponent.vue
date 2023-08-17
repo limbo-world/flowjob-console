@@ -44,7 +44,7 @@
 // 参考 https://blog.csdn.net/Miketutu/article/details/130686380
 import { CRONTypeEnum, ScheduleTypeEnum } from '@/types/console-enums';
 import { ScheduleOptionDTO } from '@/types/swagger-ts-api';
-import { Ref, ref, toRef, watch } from "vue";
+import { computed, Ref, ref, toRef, watch } from "vue";
 
 const props = defineProps<{ 
     option: ScheduleOptionDTO, 
@@ -52,7 +52,7 @@ const props = defineProps<{
 }>();
 
 // v-model:option
-const option: Ref<ScheduleOptionDTO | undefined> = toRef(props, 'option');
+const option: Ref<ScheduleOptionDTO> = toRef(props, 'option');
 const emitOptionUpdate = defineEmits<{(
     e: 'update:option',
     val: ScheduleOptionDTO
@@ -61,10 +61,22 @@ watch(option, (newValue) => {
     if (newValue) {
         emitOptionUpdate('update:option', newValue);
     }
+    scheduleRange.value = [option.value.scheduleStartAt, option.value.scheduleEndAt];
+    
 }, { deep: true })
 
-
-const scheduleRange = ref();
+// 调度周期
+// const scheduleRange = computed(() => [option.value.scheduleStartAt, option.value.scheduleEndAt]);
+const scheduleRange = ref<[string, string]>(['', '']);
+watch(scheduleRange, (newValue) => {
+    if (newValue) {
+        option.value.scheduleStartAt = newValue[0];
+        option.value.scheduleEndAt = newValue[1];
+    } else {
+        option.value.scheduleStartAt = '';
+        option.value.scheduleEndAt = '';
+    }
+}, { deep: true })
 
 
 </script>

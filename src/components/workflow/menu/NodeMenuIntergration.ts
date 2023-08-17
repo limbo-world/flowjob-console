@@ -78,6 +78,9 @@ function getNodeMenuItems(node: Node, args: X6GraphControlIntegerationArgs) {
                 const { nodes, edges } = generateNodesAndEdges(graph, plan.dagData, [parentJob, newJob]);
                 graph.addNodes(nodes);
                 graph.addEdges(edges);
+
+                // 隐藏右键菜单
+                contextMenuRef.value.hideContextMenu();
             }
         },
         {
@@ -97,6 +100,8 @@ function getNodeMenuItems(node: Node, args: X6GraphControlIntegerationArgs) {
                 graph.addNodes(nodes);
                 graph.addEdges(edges);
 
+                // 隐藏右键菜单
+                contextMenuRef.value.hideContextMenu();
             }
         },
         {
@@ -110,6 +115,9 @@ function getNodeMenuItems(node: Node, args: X6GraphControlIntegerationArgs) {
 
                 removeJob(plan, node.id);
                 graph.removeNode(node);
+
+                // 隐藏右键菜单
+                contextMenuRef.value.hideContextMenu();
             }
         },
         {
@@ -123,6 +131,9 @@ function getNodeMenuItems(node: Node, args: X6GraphControlIntegerationArgs) {
 
                 const removedJobIds = removeChildJob(plan, node.id);
                 removedJobIds.forEach(jid => graph.removeNode(jid));
+
+                // 隐藏右键菜单
+                contextMenuRef.value.hideContextMenu();
             }
         }
     ]

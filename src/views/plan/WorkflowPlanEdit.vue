@@ -3,7 +3,7 @@
         <el-main>
 
             <!-- 基础内容 -->
-            <el-form :model="planRef" label-width="120px" v-loading="loading">
+            <el-form :model="planRef" label-width="130px" v-loading="loading">
                 <el-form-item label="名称">
                     <el-input v-model="planRef.name" :disabled="readonly" />
                 </el-form-item>
@@ -84,7 +84,8 @@ async function loadPlan(planId?: string): Promise<PlanDTO> {
 
     return proxy.$request
         .get(`/api/v1/workflow-plan/get`, { params: { planId: planId } })
-        .then((response: any) => response.data as PlanDTO);
+        .then((response: any) => response.data as PlanDTO)
+        .then();
 }
 
 
