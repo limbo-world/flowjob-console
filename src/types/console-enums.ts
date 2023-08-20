@@ -246,6 +246,7 @@ export class TagFilterConditionEnum {
 export class PlanStatusEnum {
     public static UNKNOWN: Label = {label: '未知', value: 0};
     public static SCHEDULING: Label = {label: '调度中', value: 10};
+    public static DISPATCHING: Label = {label: '下发中', value: 20};
     public static EXECUTING: Label = {label: '执行中', value: 30};
     public static SUCCEED: Label = {label: '执行成功', value: 40};
     public static FAILED: Label = {label: '执行失败', value: 50};
@@ -255,13 +256,14 @@ export class PlanStatusEnum {
         this.valMap = new Map<string, Label>();
         this.valMap.set(PlanStatusEnum.UNKNOWN.value, PlanStatusEnum.UNKNOWN);
         this.valMap.set(PlanStatusEnum.SCHEDULING.value, PlanStatusEnum.SCHEDULING);
+        this.valMap.set(PlanStatusEnum.DISPATCHING.value, PlanStatusEnum.DISPATCHING);
         this.valMap.set(PlanStatusEnum.EXECUTING.value, PlanStatusEnum.EXECUTING);
         this.valMap.set(PlanStatusEnum.SUCCEED.value, PlanStatusEnum.SUCCEED);
         this.valMap.set(PlanStatusEnum.FAILED.value, PlanStatusEnum.FAILED);
     }
 
     static getArr(): Array<Label> {
-        return [PlanStatusEnum.SCHEDULING, PlanStatusEnum.EXECUTING, PlanStatusEnum.SUCCEED, PlanStatusEnum.FAILED];
+        return [PlanStatusEnum.SCHEDULING, PlanStatusEnum.DISPATCHING, PlanStatusEnum.EXECUTING, PlanStatusEnum.SUCCEED, PlanStatusEnum.FAILED];
     }
 
     static getByValue(val:string): Label {

@@ -13,23 +13,26 @@
 
     <el-main>
       <el-table :data="workers">
-        <el-table-column prop="workerId" label="ID"></el-table-column>
-        <el-table-column prop="name" label="名称"></el-table-column>
-        <el-table-column prop="protocol" label="通信协议"></el-table-column>
-        <el-table-column label="地址">
+        <el-table-column prop="workerId" label="ID" width="150"></el-table-column>
+        <el-table-column prop="name" label="名称" width="150"></el-table-column>
+        <el-table-column prop="protocol" label="通信协议" width="100"></el-table-column>
+        <el-table-column label="地址" width="150">
           <template #default="scope">
             {{ scope.row.host + ":" + scope.row.port }}
           </template>
         </el-table-column>
-        <el-table-column label="状态">
-          <template #default="scope">
-            {{WorkerStatusEnum.getByValue(scope.row.status).label}}
-          </template>
-        </el-table-column>
+        <el-table-column prop="availableCpu" label="剩余CPU" width="100"></el-table-column>
+        <el-table-column prop="availableRam" label="剩余内存/MB" width="100"></el-table-column>
+        <el-table-column prop="availableQueueLimit" label="剩余队列" width="100"></el-table-column>
         <el-table-column label="标签">
           <template #default="scope">
             <el-tag v-for="(property, idx) in scope.row.tags" :key="property" type="success">{{property.key + ":" + property.value}}
             </el-tag>
+          </template>
+        </el-table-column>
+        <el-table-column label="状态" width="100">
+          <template #default="scope">
+            {{WorkerStatusEnum.getByValue(scope.row.status).label}}
           </template>
         </el-table-column>
         <el-table-column label="是否启用" width="100">

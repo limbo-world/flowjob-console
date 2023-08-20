@@ -7,7 +7,7 @@
         </el-form-item>
         <el-form-item>
           <el-button type="primary" @click="loadPlans" :icon="Search">查询</el-button>
-          <el-button type="primary" @click="() => toPlanInfo(null, PlanTypeEnum.NORMAL.value, true)" :icon="CirclePlus">新增普通任务</el-button>
+          <el-button type="primary" @click="() => toPlanInfo(null, PlanTypeEnum.STANDALONE.value, true)" :icon="CirclePlus">新增普通任务</el-button>
           <el-button type="primary" @click="() => toPlanInfo(null, PlanTypeEnum.WORKFLOW.value, true)" :icon="CirclePlus">新增工作流任务</el-button>
         </el-form-item>
       </el-form>

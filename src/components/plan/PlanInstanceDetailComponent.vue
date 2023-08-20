@@ -32,6 +32,7 @@
     <el-table :data="tasks" style="width: 100%" row-key="id" border>
       <el-table-column prop="taskId" label="id"/>
       <el-table-column prop="workerId" label="workerId"/>
+      <el-table-column prop="workerAddress" label="workerAddress"/>
       <el-table-column label="类型" width="100">
         <template #default="scope">
           {{ TaskTypeEnum.getByValue(scope.row.type).label }}
