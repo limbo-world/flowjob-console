@@ -17,7 +17,7 @@
           <el-button link type="primary" @click="() => {
             tasksVisible = true; taskQueryForm.jobInstanceId = scope.row.jobInstanceId; loadTasks()
           }">查看详情</el-button>
-          <el-button link type="primary" @click="() => {errorVisible = true;errorMsg.value = scope.row.errorMsg}">异常信息</el-button>
+          <el-button link type="primary" @click="() => {errorMsg = scope.row.errorMsg; errorVisible = true;}">异常信息</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -48,8 +48,8 @@
       </el-table-column>
       <el-table-column label="操作" width="200">
         <template #default="scope">
-          <el-button link type="primary" @click="() => {errorVisible = true;errorMsg.value = scope.row.errorMsg}">异常信息</el-button>
-          <el-button link type="primary" @click="() => {errorVisible = true;errorMsg.value = scope.row.errorStackTrace}">异常堆栈</el-button>
+          <el-button link type="primary" @click="() => {errorMsg = scope.row.errorMsg; errorVisible = true;}">异常信息</el-button>
+          <el-button link type="primary" @click="() => {errorMsg = scope.row.errorStackTrace; errorVisible = true;}">异常堆栈</el-button>
         </template>
       </el-table-column>
     </el-table>
