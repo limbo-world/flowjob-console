@@ -45,9 +45,9 @@
   </div>
 </template>
 
-<script>
+<script lang="ts">
 import ScrollView from '@/components/ScrollView.vue';
-import MenuConfigs from '@/libs/router/menu.ts';
+import MenuConfigs from '@/libs/router/menu';
 
 export default {
   data() {
