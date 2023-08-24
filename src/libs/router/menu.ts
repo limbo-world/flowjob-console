@@ -35,16 +35,16 @@ export default [
         name: "menus.workerList",
         route: "/worker/list"
     },
-    {
-        code: "998",
-        icon: "el-icon-mostly-cloudy",
-        name: "测试 Demo 组件",
-        route: "/test/workflow-demo"
-    },
-    {
-        code: "999",
-        icon: "el-icon-mostly-cloudy",
-        name: "测试 Workflow 组件",
-        route: "/test/workflow-test"
-    },
+    // {
+    //     code: "998",
+    //     icon: "el-icon-mostly-cloudy",
+    //     name: "测试 Demo 组件",
+    //     route: "/test/workflow-demo"
+    // },
+    // {
+    //     code: "999",
+    //     icon: "el-icon-mostly-cloudy",
+    //     name: "测试 Workflow 组件",
+    //     route: "/test/workflow-test"
+    // },
 ] as Array<MenuConfig>

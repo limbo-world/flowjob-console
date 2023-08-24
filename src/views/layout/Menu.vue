@@ -108,6 +108,7 @@ export default {
 
     img {
       width: 70%;
+      height: 100%;
     }
   }
 

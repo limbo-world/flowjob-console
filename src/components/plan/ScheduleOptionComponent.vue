@@ -1,16 +1,16 @@
 <template>
     <el-form-item label="调度周期">
         <el-date-picker v-model="scheduleRange" :disabled="disabled"
-            type="datetimerange" range-separator="To" value-format="YYYY-MM-DD HH:mm:ss" 
+            type="datetimerange" range-separator="To" value-format="YYYY-MM-DD HH:mm:ss"
             placeholder="请选择"  start-placeholder="请选择开始时间" end-placeholder="请选择结束时间" />
     </el-form-item>
 
-    <el-form-item label="延迟时间">
+    <el-form-item label="延迟时间(毫秒)">
         <el-input-number v-model="option.scheduleDelay" :min="0" controls-position="right" :disabled="disabled" />
     </el-form-item>
 
     <el-form-item label="调度方式">
-        <el-radio-group v-model="option.scheduleType" 
+        <el-radio-group v-model="option.scheduleType"
             class="ml-4" :disabled="disabled">
             <el-radio v-for="item in ScheduleTypeEnum.getArr()" :key="item.value" :label="item.value">
                 {{ item.label }}
@@ -20,7 +20,7 @@
 
     <template
         v-if="ScheduleTypeEnum.FIXED_RATE.value === option.scheduleType || ScheduleTypeEnum.FIXED_DELAY.value === option.scheduleType">
-        <el-form-item label="调度间隔">
+        <el-form-item label="调度间隔(毫秒)">
             <el-input-number v-model="option.scheduleInterval" :min="0" controls-position="right" :disabled="disabled" />
         </el-form-item>
     </template>
@@ -46,9 +46,9 @@ import { CRONTypeEnum, ScheduleTypeEnum } from '@/types/console-enums';
 import { ScheduleOptionDTO } from '@/types/swagger-ts-api';
 import { Ref, ref, toRef, watch } from "vue";
 
-const props = defineProps<{ 
-    option: ScheduleOptionDTO, 
-    disabled: boolean 
+const props = defineProps<{
+    option: ScheduleOptionDTO,
+    disabled: boolean
 }>();
 
 // v-model:option

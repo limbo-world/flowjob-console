@@ -4,10 +4,10 @@
       <el-radio v-for="item in LoadBalanceTypeEnum.getArr()" :key="item.value" :label="item.value">{{ item.label }}</el-radio>
     </el-radio-group>
   </el-form-item>
-  <el-form-item label="所需CPU数" :label-width="labelWidth">
+  <el-form-item label="所需CPU" :label-width="labelWidth">
     <el-input v-model="option.cpuRequirement" @change="onChange" :disabled="disabled"/>
   </el-form-item>
-  <el-form-item label="所需内存大小" :label-width="labelWidth">
+  <el-form-item label="所需内存(MB)" :label-width="labelWidth">
     <el-input v-model="option.ramRequirement" @change="onChange" :disabled="disabled"/>
   </el-form-item>
   <el-form-item label="过滤标签" :label-width="labelWidth">
@@ -65,8 +65,8 @@ interface DispatchOption {
   tagFilters?: Array<TagFilter>
 }
 
-const props = defineProps<{ 
-  option: DispatchOption, 
+const props = defineProps<{
+  option: DispatchOption,
   disabled: boolean,
   labelWidth: string | number
 }>()
