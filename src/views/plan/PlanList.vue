@@ -180,7 +180,7 @@ const toPlanInfo = (planId: string, planType: number, edit: any) => {
 }
 
 const schedulePlan = (planId: string) => {
-  proxy.$request.post(`/api/v1/plan/schedule?planId=${planId}`).then((response: any) => {
+  proxy.$request.post(`/api/v1/plan/schedule`, {planId: planId}).then((response: any) => {
     ElMessage({
       message: '操作成功',
       type: 'success',
