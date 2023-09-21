@@ -1,5 +1,5 @@
 import { JobTypeEnum, LoadBalanceTypeEnum, PlanTypeEnum, ScheduleTypeEnum, TriggerTypeEnum } from "@/types/console-enums";
-import { PlanDTO, WorkflowJobDTO } from "@/types/swagger-ts-api";
+import { NormalPlanInfoDTO, PlanDTO, WorkflowJobDTO } from "@/types/swagger-ts-api";
 
 
 /**
@@ -21,6 +21,28 @@ export function createEmptyPlan(): PlanDTO {
         dagData: {
             nodes: new Map()
         }
+    };
+}
+
+
+/**
+ * 生成空白任务
+ */
+export function createEmptyNormalPlan(): NormalPlanInfoDTO {
+    return  {
+        planId: 'plan_' + Date.now(),
+        name: '',
+        description: '',
+        triggerType: TriggerTypeEnum.SCHEDULE.value,
+        scheduleOption: {
+            scheduleType: ScheduleTypeEnum.FIXED_DELAY.value
+        },
+        type: "UNKNOWN",
+        attributes: new Map(),
+        dispatchOption: {
+            loadBalanceType: LoadBalanceTypeEnum.RANDOM.value
+        },
+        executorName: ''
     };
 }
 

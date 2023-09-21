@@ -3,7 +3,7 @@
     <div class="workerflow-plan-dag">
         <div :id="x6ContainerId" class="workflow-x6-container"></div>
 
-        <graph-context-menu ref="contextMenuRef"></graph-context-menu>
+        <graph-context-menu ref="contextMenuRef" ></graph-context-menu>
         <graph-nav-menu ref="navMenuRef"></graph-nav-menu>
 
         <workflow-drawer ref="drawerRef" @job-change="onJobUpdate"></workflow-drawer>
@@ -38,6 +38,12 @@ watch(plan, (newValue, oldValue) => {
     }
 }, { deep: true })
 
+// 属性
+const props = defineProps<{ 
+  readonly: boolean,
+}>()
+
+const readonly = toRef(props, 'readonly');
 const mounted = ref(false);
 const x6ContainerId = ref(`x6Container_${Date.now()}`);
 const x6GraphRef = ref<Graph>();
@@ -79,13 +85,16 @@ function initX6() {
     x6GraphRef.value.centerContent();
 
     // 注册 x6 控制器
-    initX6GraphControl({
-        x6GraphRef, 
-        contextMenuRef, 
-        navMenuRef,
-        drawerRef,
-        planRef: plan
-    });
+    debugger
+    if (!readonly.value) {
+        initX6GraphControl({
+            x6GraphRef, 
+            contextMenuRef, 
+            navMenuRef,
+            drawerRef,
+            planRef: plan
+        });
+    }
 }
 
 

@@ -24,7 +24,7 @@
 
                 <!-- DAG -->
                 <el-form-item label="作业 DAG">
-                    <workflow-plan-dag ref="dagRef" :plan="planRef"></workflow-plan-dag>
+                    <workflow-plan-dag ref="dagRef" :plan="planRef" :readonly="readonly"></workflow-plan-dag>
                 </el-form-item>
 
                 <el-form-item>
@@ -45,17 +45,15 @@ import ScheduleOptionComponent from '@/components/plan/ScheduleOptionComponent.v
 import WorkflowPlanDag from '@/components/workflow/WorkflowPlanDag.vue';
 import { useRouter } from 'vue-router'
 import { ElMessage } from 'element-plus'
-import { PlanDTO, WorkflowJobDTO } from '@/types/swagger-ts-api';
+import { PlanDTO } from '@/types/swagger-ts-api';
 import { createEmptyPlan } from '@/components/workflow/WorkflowPlanFunctions';
-import { Exception } from 'sass';
-import { pl } from 'element-plus/es/locale';
 
 const { proxy }: any = getCurrentInstance();
 
 const router = useRouter();
 const planId = router.currentRoute.value.query.planId as string;
 const loading = ref(true);
-const readonly = ref(false);
+const readonly = ref(router.currentRoute.value.query.readonly === '1');
 
 const planRef = ref<PlanDTO>(createEmptyPlan());
 const dagRef = ref();
@@ -84,8 +82,11 @@ async function loadPlan(planId?: string): Promise<PlanDTO> {
 
     return proxy.$request
         .get(`/api/v1/workflow-plan/get`, { params: { planId: planId } })
-        .then((response: any) => response.data as PlanDTO)
-        .then();
+        .then((response: any) => {
+            const p = response.data as PlanDTO
+            p.dagData = { nodes: new Map() };
+            return p;
+        });
 }
 
 
