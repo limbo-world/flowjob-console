@@ -15,8 +15,10 @@
           </el-radio-group>
         </el-form-item>
 
-        <!-- 调度相关 -->
-        <ScheduleOptionComponent :option="form.scheduleOption" :disabled="disabled" @onChange="receiveScheduleOptionChange"/>
+        <template v-if="TriggerTypeEnum.SCHEDULE.value === form.triggerType">
+          <!-- 调度相关 -->
+          <ScheduleOptionComponent :option="form.scheduleOption" :disabled="disabled" @onChange="receiveScheduleOptionChange"/>
+        </template>
 
         <!-- 普通任务 -->
         <el-form-item label="任务类型">
