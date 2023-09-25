@@ -21,7 +21,6 @@
     <el-main>
       <el-table :data="planInstances">
         <el-table-column prop="planInstanceId" label="ID" width="150"></el-table-column>
-        <el-table-column prop="planId" label="配置ID" width="150"></el-table-column>
         <el-table-column label="触发类型" width="100">
           <template #default="scope">
             {{ TriggerTypeEnum.getByValue(scope.row.triggerType).label }}

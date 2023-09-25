@@ -16,13 +16,15 @@
                     </el-radio-group>
                 </el-form-item>
 
-                <!-- 调度相关 -->
-                <ScheduleOptionComponent v-model:option="planRef.scheduleOption" :disabled="disabled" />
+        <template v-if="TriggerTypeEnum.SCHEDULE.value === form.triggerType">
+            <!-- 调度相关 -->
+            <ScheduleOptionComponent v-model:option="planRef.scheduleOption" :disabled="disabled" />
+        </template>
 
                 <!-- 普通任务 -->
                 <el-form-item label="任务类型">
                     <el-radio-group v-model="planRef.type" class="ml-4" :disabled="disabled">
-                        <el-radio v-for="item in JobTypeEnum.getArr()" 
+                        <el-radio v-for="item in JobTypeEnum.getArr()"
                                   :key="item.value" :label="item.value">
                             {{ item.label }}
                         </el-radio>
@@ -35,10 +37,10 @@
 
                 <!-- 属性 -->
                 <JobAttrComponent v-model:attributes="planRef.attributes" :disabled="disabled"/>
-                
+
                 <!-- 重试 -->
                 <!-- <RetryOptionComponent :job-type="jobRef.type" :option="jobRef.retryOption" :disabled="disabled"/> -->
-                
+
                     <!-- 负载 -->
                 <!-- <DispatchOptionComponent :option="jobRef.dispatchOption" :disabled="disabled"/> -->
 

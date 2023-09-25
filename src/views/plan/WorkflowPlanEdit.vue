@@ -19,8 +19,10 @@
                     </el-radio-group>
                 </el-form-item>
 
-                <!-- 调度相关 -->
-                <ScheduleOptionComponent v-model:option="planRef.scheduleOption" :disabled="readonly"/>
+                <template v-if="TriggerTypeEnum.SCHEDULE.value === form.triggerType">
+                  <!-- 调度相关 -->
+                  <ScheduleOptionComponent v-model:option="planRef.scheduleOption" :disabled="readonly"/>
+                </template>
 
                 <!-- DAG -->
                 <el-form-item label="作业 DAG">
@@ -31,7 +33,7 @@
                     <el-button type="primary" @click="savePlan(planRef)">保存</el-button>
                 </el-form-item>
 
-                
+
 
             </el-form>
         </el-main>

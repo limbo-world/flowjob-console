@@ -54,7 +54,7 @@
                 :current-page="planQueryForm.current" :page-size="planQueryForm.size" @current-change="handleCurrentChange">
             </el-pagination>
         </el-footer>
-        
+
         <el-drawer v-model="versionVisible" size="60%" title="版本列表" class="version-drawer">
             <el-table :data="versions" style="width: 100%" row-key="id" border>
                 <el-table-column prop="planInfoId" label="版本号" />
@@ -139,7 +139,7 @@ function loadPlans() {
 async function loadVersions(plan: PlanDTO) {
     // 获取 plan 信息，主要是为了获取 planInfoId，判断生效的版本 ID
     console.log(plan);
-    let uri = PlanTypeEnum.STANDALONE.value === plan.planType 
+    let uri = PlanTypeEnum.STANDALONE.value === plan.planType
                     ? '/api/v1/plan/get' : '/api/v1/workflow-plan/get';
     let response = await proxy.$request.get(`${uri}?planId=${plan.planId}`);
     currentPlan.value = plan;
@@ -147,7 +147,7 @@ async function loadVersions(plan: PlanDTO) {
 
     // 版本列表
     versionQueryForm.planId = plan.planId;
-    uri = PlanTypeEnum.STANDALONE.value === plan.planType 
+    uri = PlanTypeEnum.STANDALONE.value === plan.planType
                     ? '/api/v1/plan/version/page' : '/api/v1/workflow-plan/version/page';
     response = await proxy.$request.get(`/api/v1/plan/version/page`, { params: versionQueryForm });
     versions.value = response.data.data;
