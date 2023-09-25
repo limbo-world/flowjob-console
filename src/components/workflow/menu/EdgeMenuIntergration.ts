@@ -1,4 +1,4 @@
-import { PlanDTO, WorkflowJobDTO } from "@/types/swagger-ts-api";
+import { WorkflowPlanInfoDTO, WorkflowJobDTO } from "@/types/swagger-ts-api";
 import { Edge, Graph } from "@antv/x6";
 import { Ref, onMounted, ref } from "vue";
 import { X6GraphControlIntegerationArgs } from "./Menus";
@@ -20,7 +20,7 @@ export function initEdgeMenu(params: X6GraphControlIntegerationArgs) {
     x6GraphRef.value?.on('edge:connected', ({ edge }) => {
         const source = edge.source as Edge.TerminalCellLooseData;
         const target = edge.target as Edge.TerminalCellLooseData;
-        addChild(planRef.value as PlanDTO, source.cell as string, target.cell as string);
+        addChild(planRef.value as WorkflowPlanInfoDTO, source.cell as string, target.cell as string);
     })
 
     // 连线左键单击事件，添加删除连线按钮到 contextMenu
@@ -92,7 +92,7 @@ function getEdgeMenuItems(edge: Edge, args: X6GraphControlIntegerationArgs) {
                 // 删除父子作业关联
                 const source = edge.source as Edge.TerminalCellLooseData;
                 const target = edge.target as Edge.TerminalCellLooseData;
-                removeChild(planRef.value as PlanDTO, source.cell as string, target.cell as string)
+                removeChild(planRef.value as WorkflowPlanInfoDTO, source.cell as string, target.cell as string)
 
                 // 隐藏导航菜单、右键菜单
                 navMenuRef.value.removeMenuGroup('edgeMenus')

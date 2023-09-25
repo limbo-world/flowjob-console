@@ -2,7 +2,7 @@ import { onMounted } from "vue";
 import { X6GraphControlIntegerationArgs } from "./Menus";
 import { Graph, Node } from "@antv/x6";
 import { addChild, addEmptyJob, copyJob, removeChildJob, removeJob } from "../WorkflowPlanFunctions";
-import { PlanDTO, WorkflowJobDTO } from "@/types/swagger-ts-api";
+import { WorkflowPlanInfoDTO, WorkflowJobDTO } from "@/types/swagger-ts-api";
 import { autoLayout, generateNodesAndEdges } from "../X6GraphIntergration";
 
 
@@ -66,7 +66,7 @@ function getNodeMenuItems(node: Node, args: X6GraphControlIntegerationArgs) {
             menuType: 'default',
             menuCallback: (event: any) => {
                 const graph = x6GraphRef.value as Graph;
-                const plan = planRef.value as PlanDTO;
+                const plan = planRef.value as WorkflowPlanInfoDTO;
                 const nodePos = node.getPosition();
 
                 // 生成新的作业，并将新作业节点添加到 DAG
@@ -90,7 +90,7 @@ function getNodeMenuItems(node: Node, args: X6GraphControlIntegerationArgs) {
             menuType: 'default',
             menuCallback: (event: any) => {
                 const graph = x6GraphRef.value as Graph;
-                const plan = planRef.value as PlanDTO;
+                const plan = planRef.value as WorkflowPlanInfoDTO;
 
                 // 生成新作业
                 const newJob = copyJob(plan, node.id);
@@ -111,7 +111,7 @@ function getNodeMenuItems(node: Node, args: X6GraphControlIntegerationArgs) {
             menuType: 'danger',
             menuCallback: (event: any) => {
                 const graph = x6GraphRef.value as Graph;
-                const plan = planRef.value as PlanDTO;
+                const plan = planRef.value as WorkflowPlanInfoDTO;
 
                 removeJob(plan, node.id);
                 graph.removeNode(node);
@@ -127,7 +127,7 @@ function getNodeMenuItems(node: Node, args: X6GraphControlIntegerationArgs) {
             menuType: 'danger',
             menuCallback: (event: any) => {
                 const graph = x6GraphRef.value as Graph;
-                const plan = planRef.value as PlanDTO;
+                const plan = planRef.value as WorkflowPlanInfoDTO;
 
                 const removedJobIds = removeChildJob(plan, node.id);
                 removedJobIds.forEach(jid => graph.removeNode(jid));

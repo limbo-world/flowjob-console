@@ -1,4 +1,4 @@
-import { PlanDTO } from "@/types/swagger-ts-api";
+import { WorkflowPlanInfoDTO } from "@/types/swagger-ts-api";
 import { MenuItem, X6GraphControlIntegerationArgs } from "./Menus";
 import { autoLayout, generateNodesAndEdges } from "../X6GraphIntergration";
 import { Graph } from "@antv/x6";
@@ -54,7 +54,7 @@ export function getDefaultContextMenuItems(params: X6GraphControlIntegerationArg
             menuIcon: 'CirclePlusFilled',
             menuName: '新增节点',
             menuCallback: () => {
-                const plan = planRef?.value as PlanDTO;
+                const plan = planRef?.value as WorkflowPlanInfoDTO;
                 const newJob = addEmptyJob(plan, contextMenuRef?.value.getPositionInGraph());
                 const { nodes } = generateNodesAndEdges(x6GraphRef.value as Graph, plan.dagData, [newJob]);
                 x6GraphRef.value?.addNodes(nodes);

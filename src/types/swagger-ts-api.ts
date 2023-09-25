@@ -636,7 +636,7 @@ export interface WorkflowJobDTO {
   /** 作业类型 */
   type: "UNKNOWN" | "STANDALONE" | "BROADCAST" | "MAP" | "MAP_REDUCE";
   /** 属性参数 */
-  attributes?: Record<string, object>;
+  attributes?: Map<string, string>;
   retryOption?: RetryOptionDTO;
   dispatchOption: DispatchOptionDTO;
   /** 执行器名称 */
@@ -676,6 +676,20 @@ export interface WorkflowPlanInfoDTO {
   scheduleOption: ScheduleOptionDTO;
   /** 工作流对应的所有作业 */
   workflow?: WorkflowJobDTO[];
+
+  dagData: PlanDagData;
+}
+
+export interface PlanDagData {
+  nodes: Map<string, PlanDagNodeData>
+  // edges: Map<string, object>
+}
+
+export interface PlanDagNodeData {
+  x: number;
+  y: number;
+  w: number;
+  h: number;
 }
 
 export interface WorkerQueryParam {

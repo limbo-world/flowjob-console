@@ -45,7 +45,7 @@ import ScheduleOptionComponent from '@/components/plan/ScheduleOptionComponent.v
 import WorkflowPlanDag from '@/components/workflow/WorkflowPlanDag.vue';
 import { useRouter } from 'vue-router'
 import { ElMessage } from 'element-plus'
-import { PlanDTO } from '@/types/swagger-ts-api';
+import { WorkflowPlanInfoDTO } from '@/types/swagger-ts-api';
 import { createEmptyPlan } from '@/components/workflow/WorkflowPlanFunctions';
 
 const { proxy }: any = getCurrentInstance();
@@ -55,7 +55,7 @@ const planId = router.currentRoute.value.query.planId as string;
 const loading = ref(true);
 const readonly = ref(router.currentRoute.value.query.readonly === '1');
 
-const planRef = ref<PlanDTO>(createEmptyPlan());
+const planRef = ref<WorkflowPlanInfoDTO>(createEmptyPlan());
 const dagRef = ref();
 
 onMounted(async () => {
@@ -75,7 +75,7 @@ onMounted(async () => {
  * 加载任务
  * @param planId 任务 ID
  */
-async function loadPlan(planId?: string): Promise<PlanDTO> {
+async function loadPlan(planId?: string): Promise<WorkflowPlanInfoDTO> {
     if (!planId || planId === '') {
         return new Promise((resolve) => resolve(createEmptyPlan()));
     }
@@ -83,8 +83,19 @@ async function loadPlan(planId?: string): Promise<PlanDTO> {
     return proxy.$request
         .get(`/api/v1/workflow-plan/get`, { params: { planId: planId } })
         .then((response: any) => {
-            const p = response.data as PlanDTO
+            const p = response.data as WorkflowPlanInfoDTO
             p.dagData = { nodes: new Map() };
+            if (p.workflow) {
+                p.workflow.forEach(job => {
+                    // 处理 attributes 的类型为 Map
+                    if (job.attributes) {
+                        const obj = job.attributes as object;
+                        job.attributes = new Map(Object.entries(obj));
+                    } else {
+                        job.attributes = new Map();
+                    }
+                })
+            }
             return p;
         });
 }
@@ -94,9 +105,19 @@ async function loadPlan(planId?: string): Promise<PlanDTO> {
  * 保存工作流任务
  * @param plan 任务
  */
-async function savePlan(plan: PlanDTO) {
+async function savePlan(plan: WorkflowPlanInfoDTO) {
     console.log(planRef.value)
-    const planParam = JSON.parse(JSON.stringify(planRef.value)) as PlanDTO;
+    const planParam = JSON.parse(JSON.stringify(planRef.value));
+
+    // workflow 作业的 attribute 从 Map 转为对象
+    if (planParam.workflow && planRef.value.workflow) {
+        for (let i = 0; i < planParam.workflow.length; i++) {
+            const attr = planRef.value.workflow[i].attributes;
+            if (attr) {
+                planParam.workflow[i].attributes = Object.fromEntries(attr);
+            }
+        }
+    }
 
     // 根据id判断更新还是新增
     if (planId) {

@@ -4,9 +4,9 @@ import dagre from '@dagrejs/dagre'
 import DagNode from "@/components/workflow/JobNode.vue";
 import { Edge, Graph, Path, Node, Cell } from "@antv/x6";
 import { Selection } from "@antv/x6-plugin-selection";
-import { JobDTO, PlanDTO, PlanDagData, PlanDagNodeData, WorkflowJobDTO } from "@/types/swagger-ts-api";
+import { JobDTO, WorkflowPlanInfoDTO, PlanDagData, PlanDagNodeData, WorkflowJobDTO } from "@/types/swagger-ts-api";
 
-export function useX6Graph(graphContainerId: string, planRef: Ref<PlanDTO | undefined>) {
+export function useX6Graph(graphContainerId: string, planRef: Ref<WorkflowPlanInfoDTO | undefined>) {
     console.log('x6 容器 ID ' + graphContainerId);
 
     // 注册节点组件
@@ -179,7 +179,7 @@ export function useX6Graph(graphContainerId: string, planRef: Ref<PlanDTO | unde
  * @param plan 任务，自适应布局后会更新任务中的 DAG 坐标信息
  * @param dir 布局方向，取值有四个：LR RL TB BT
  */
-export function autoLayout(graph: Graph, planRef: Ref<PlanDTO|undefined>, dir: string) {
+export function autoLayout(graph: Graph, planRef: Ref<WorkflowPlanInfoDTO|undefined>, dir: string) {
     if (!graph) {
         return;
     }

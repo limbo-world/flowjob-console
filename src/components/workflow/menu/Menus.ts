@@ -1,4 +1,4 @@
-import { PlanDTO, WorkflowJobDTO } from "@/types/swagger-ts-api"
+import { WorkflowPlanInfoDTO, WorkflowJobDTO } from "@/types/swagger-ts-api"
 import { Graph } from "@antv/x6"
 import { ComponentPublicInstance, Ref } from "vue"
 import GraphContextMenu from "./GraphContextMenu.vue"
@@ -36,5 +36,5 @@ export interface X6GraphControlIntegerationArgs {
     contextMenuRef: Ref<ComponentPublicInstance<typeof GraphContextMenu>>,
     navMenuRef: Ref<ComponentPublicInstance<typeof GraphNavMenu>>,
     drawerRef: Ref<ComponentPublicInstance<typeof WorkfowDrawer>>,
-    planRef: Ref<PlanDTO | undefined>
+    planRef: Ref<WorkflowPlanInfoDTO | undefined>
 }

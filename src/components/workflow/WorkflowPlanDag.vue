@@ -14,7 +14,7 @@
 <script setup lang="ts">
 import { onMounted, Ref, ref, toRef, watch } from "vue";
 import { Graph } from "@antv/x6";
-import { PlanDagData, PlanDTO, WorkflowJobDTO } from "@/types/swagger-ts-api";
+import { PlanDagData, WorkflowPlanInfoDTO, WorkflowJobDTO } from "@/types/swagger-ts-api";
 import { useX6Graph, autoLayout, refreshDAGJobNodes, updateDAGNode } from "@/components/workflow/X6GraphIntergration";
 
 import GraphContextMenu from "./menu/GraphContextMenu.vue"
@@ -27,9 +27,9 @@ import { updateJob } from "./WorkflowPlanFunctions";
 
 
 // v-model:plan
-const plan: Ref<PlanDTO | undefined> = ref();
+const plan: Ref<WorkflowPlanInfoDTO | undefined> = ref();
 const emitPlanUpdate = defineEmits<{
-    (e: 'onPlanUpdate', val: PlanDTO): void
+    (e: 'onPlanUpdate', val: WorkflowPlanInfoDTO): void
 }>();
 watch(plan, (newValue, oldValue) => {
     console.log('plan 更新', newValue, oldValue);
@@ -101,7 +101,7 @@ function initX6() {
 /**
  * 更新任务
  */
-function refresh(p: PlanDTO) {
+function refresh(p: WorkflowPlanInfoDTO) {
     if (p) {
         plan.value = p;
     }
@@ -115,7 +115,7 @@ function refresh(p: PlanDTO) {
 function onJobUpdate(job: WorkflowJobDTO) {
     console.log('作业更新', job);
 
-    const planDTO = plan.value as PlanDTO;
+    const planDTO = plan.value as WorkflowPlanInfoDTO;
     const graph = x6GraphRef.value as Graph;
     if (!planDTO || !graph) {
         return;

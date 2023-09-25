@@ -1,23 +1,20 @@
 import { JobTypeEnum, LoadBalanceTypeEnum, PlanTypeEnum, ScheduleTypeEnum, TriggerTypeEnum } from "@/types/console-enums";
-import { NormalPlanInfoDTO, PlanDTO, WorkflowJobDTO } from "@/types/swagger-ts-api";
+import { NormalPlanInfoDTO, WorkflowPlanInfoDTO, WorkflowJobDTO } from "@/types/swagger-ts-api";
 
 
 /**
  * 生成空白任务
  */
-export function createEmptyPlan(): PlanDTO {
+export function createEmptyPlan(): WorkflowPlanInfoDTO {
     return  {
         planId: 'plan_' + Date.now(),
         name: '',
         description: '',
-        planType: PlanTypeEnum.WORKFLOW.value,
         triggerType: TriggerTypeEnum.SCHEDULE.value,
         scheduleOption: {
             scheduleType: ScheduleTypeEnum.FIXED_DELAY.value
         },
         workflow: [ createEmptyJob() ],
-        currentVersion: '1',
-        recentlyVersion: '1',
         dagData: {
             nodes: new Map()
         }
@@ -83,7 +80,7 @@ export function createEmptyJob(id?: string): WorkflowJobDTO {
  * @param postion 节点所在位置
  * @returns 新增的作业
  */
-export function addEmptyJob(plan: PlanDTO, postion: { x: number, y: number}): WorkflowJobDTO {
+export function addEmptyJob(plan: WorkflowPlanInfoDTO, postion: { x: number, y: number}): WorkflowJobDTO {
     const job: WorkflowJobDTO = createEmptyJob();
 
     plan.workflow?.push(job);
@@ -101,7 +98,7 @@ export function addEmptyJob(plan: PlanDTO, postion: { x: number, y: number}): Wo
  * @param plan DAG 任务
  * @param jobId 被复制的作业 ID
  */
-export function copyJob(plan: PlanDTO, jobId: string): WorkflowJobDTO {
+export function copyJob(plan: WorkflowPlanInfoDTO, jobId: string): WorkflowJobDTO {
     const job = plan.workflow?.filter(j => j.id === jobId)[0] as WorkflowJobDTO;
     const newJob = { ...job };
     newJob.id = Date.now() + '';
@@ -125,7 +122,7 @@ export function copyJob(plan: PlanDTO, jobId: string): WorkflowJobDTO {
  * @param plan DAG 任务
  * @param newJob 新作业数据
  */
-export function updateJob(plan: PlanDTO, newJob: WorkflowJobDTO) {
+export function updateJob(plan: WorkflowPlanInfoDTO, newJob: WorkflowJobDTO) {
     const idx = plan.workflow?.findIndex(j => j.id === newJob.id) as number;
     if (idx >= 0) {
         plan.workflow?.splice(idx, 1, newJob);
@@ -140,7 +137,7 @@ export function updateJob(plan: PlanDTO, newJob: WorkflowJobDTO) {
  * @param plan DAG 任务
  * @param jobId 被删除的作业 ID
  */
-export function removeJob(plan: PlanDTO, jobId: string) {
+export function removeJob(plan: WorkflowPlanInfoDTO, jobId: string) {
     // 移除作业节点
     plan.workflow = plan.workflow?.filter(j => j.id !== jobId);
     plan.dagData.nodes.delete(jobId);
@@ -163,7 +160,7 @@ export function removeJob(plan: PlanDTO, jobId: string) {
  * @param jobId 被删除子作业的作业 ID
  * @returns 
  */
-export function removeChildJob(plan: PlanDTO, jobId: string): string[] {
+export function removeChildJob(plan: WorkflowPlanInfoDTO, jobId: string): string[] {
     // 先找到节点
     const parentJob = plan.workflow?.filter(j => j.id === jobId)[0];
     if (!parentJob || !parentJob.children) {
@@ -182,7 +179,7 @@ export function removeChildJob(plan: PlanDTO, jobId: string): string[] {
  * @param jobId 被删除子作业的作业 ID
  * @returns 
  */
-function removeChildJobAndSelf(plan: PlanDTO, jobId: string): string[] {
+function removeChildJobAndSelf(plan: WorkflowPlanInfoDTO, jobId: string): string[] {
     // 先找到节点
     const parentJob = plan.workflow?.filter(j => j.id === jobId)[0];
     if (!parentJob) {
@@ -210,7 +207,7 @@ function removeChildJobAndSelf(plan: PlanDTO, jobId: string): string[] {
  * @param parentJobId 父作业 ID
  * @param childJobId 子作业 ID
  */
-export function addChild(plan: PlanDTO, parentJobId: string, childJobId: string) {
+export function addChild(plan: WorkflowPlanInfoDTO, parentJobId: string, childJobId: string) {
     let parent!: WorkflowJobDTO;
     let child!: WorkflowJobDTO;
     plan.workflow?.forEach(job => {
@@ -235,7 +232,7 @@ export function addChild(plan: PlanDTO, parentJobId: string, childJobId: string)
  * @param parentJobId 父作业 ID
  * @param childJobId 子作业 ID
  */
-export function removeChild(plan: PlanDTO, parentJobId: string, childJobId: string) {
+export function removeChild(plan: WorkflowPlanInfoDTO, parentJobId: string, childJobId: string) {
     let parent!: WorkflowJobDTO;
     let child!: WorkflowJobDTO;
     plan.workflow?.forEach(job => {
