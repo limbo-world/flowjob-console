@@ -4,6 +4,12 @@ Flowjob 的 前端页面
 
 [后端项目](https://github.com/limbo-world/flowjob)
 
+版本兼容
+
+|前端|后端|
+|---|---|
+|2.0.x|2.0.x|
+
 ## 使用
 
 node v18
