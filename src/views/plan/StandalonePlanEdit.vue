@@ -16,7 +16,7 @@
                     </el-radio-group>
                 </el-form-item>
 
-        <template v-if="TriggerTypeEnum.SCHEDULE.value === form.triggerType">
+        <template v-if="TriggerTypeEnum.SCHEDULE.value === planRef.triggerType">
             <!-- 调度相关 -->
             <ScheduleOptionComponent v-model:option="planRef.scheduleOption" :disabled="disabled" />
         </template>
