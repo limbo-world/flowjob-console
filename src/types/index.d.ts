@@ -17,3 +17,15 @@ interface MenuConfig {
     /** 子路菜单 */
     children?: Array<MenuConfig>;
 }
+
+interface NodeStatus {
+    id: string
+    status: 'default' | 'success' | 'failed' | 'running'
+    label?: string
+}
+
+interface Label {
+    key?: string; // 唯一键
+    label: string; // 展示文本
+    value: any; // 具体值
+}

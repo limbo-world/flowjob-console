@@ -15,6 +15,14 @@ export default [
                 component: () => import("@/views/plan/PlanList.vue"),
             },
             {
+                path: '/standalone-plan/edit',
+                component: () => import("@/views/plan/StandalonePlanEdit.vue"),
+            },
+            {
+                path: '/workflow-plan/edit',
+                component: () => import("@/views/plan/WorkflowPlanEdit.vue"),
+            },
+            {
                 path: '/plan/instance/list',
                 component: () => import("@/views/plan/PLanInstanceList.vue"),
             },
@@ -29,6 +37,18 @@ export default [
             {
                 path: '/test/workflow',
                 component: () => import("@/views/plan/WorkflowDetail.vue"),
+            },
+            {
+                path: '/test/d1',
+                component: () => import("@/views/test/DagDemo.vue"),
+            },
+            {
+                path: '/test/workflow-demo',
+                component: () => import("@/views/test/DagDemo1.vue"),
+            },
+            {
+                path: '/test/workflow-test',
+                component: () => import("@/views/test/WorkflowPlanTest.vue"),
             },
         ]
     }

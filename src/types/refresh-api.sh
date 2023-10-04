@@ -1,0 +1,1 @@
+swagger-typescript-api -p http://localhost:8081/api-docs -o ./ -n swagger-ts-api.ts

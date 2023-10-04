@@ -1,19 +1,21 @@
 # flowjob-console
 
-## Project setup
-```
-npm install
-```
+Flowjob 的 前端页面
 
-### Compiles and hot-reloads for development
-```
-npm run serve
-```
+[后端项目](https://github.com/limbo-world/flowjob)
 
-### Compiles and minifies for production
-```
-npm run build
-```
+版本兼容
 
-### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).
+|前端|后端|
+|---|---|
+|2.0.x|2.0.x|
+
+## 使用
+
+node v18
+
+npm install (安装依赖)
+
+npm run serve (本地服务启动)
+
+npm run build (打包成静态资源)

@@ -8,48 +8,35 @@
 </template>
 
 
-<script>
+<script setup lang="ts">
+import {getCurrentInstance, ref, toRef} from "vue";
 
-    /**
-     * 使用组件时必须指定高度
-     */
-    export default {
-        props: {
-            'debounceDelta': {
-                type: Number,
-                default: 10
-            }
-        },
+const {proxy}: any = getCurrentInstance();
 
-        data() {
-            return {
-                scrollTop: 0
-            };
-        },
+const props = defineProps<{debounceDelta: number}>()
 
-        methods: {
+const debounceDelta = toRef(props, "debounceDelta");
+const scrollTop = ref(0)
 
-            handleScroll(e) {
-                const eventDelta = e.wheelDelta || -e.deltaY * 3;
-                const $container = this.$refs.scrollContainer;
-                const $containerHeight = $container.offsetHeight;
-                const $visibleArea = this.$refs.visibleArea;
-                const $visibleHeight = $visibleArea.offsetHeight;
+const handleScroll = (e:any) => {
+  const eventDelta = e.wheelDelta || -e.deltaY * 3;
+  const $container = proxy.$refs.scrollContainer;
+  const $containerHeight = $container.offsetHeight;
+  const $visibleArea = proxy.$refs.visibleArea;
+  const $visibleHeight = $visibleArea.offsetHeight;
 
-                if (eventDelta > 0) {
-                    this.scrollTop = Math.min(0, this.scrollTop + eventDelta)
-                } else {
-                    if ($containerHeight - this.debounceDelta < $visibleHeight) {
-                        if (this.scrollTop >= -($visibleHeight - $containerHeight + this.debounceDelta)) {
-                          this.scrollTop = Math.max(this.scrollTop + eventDelta, $containerHeight - $visibleHeight - this.debounceDelta)
-                        }
-                    } else {
-                        this.scrollTop = 0
-                    }
-                }
-            }
-        }
+  if (eventDelta > 0) {
+    scrollTop.value = Math.min(0, scrollTop.value + eventDelta)
+  } else {
+    if ($containerHeight - debounceDelta.value < $visibleHeight) {
+      if (scrollTop.value >= -($visibleHeight - $containerHeight + debounceDelta.value)) {
+        scrollTop.value = Math.max(scrollTop.value + eventDelta, $containerHeight - $visibleHeight - this.debounceDelta)
+      }
+    } else {
+      scrollTop.value = 0
     }
+  }
+}
 </script>
 
 

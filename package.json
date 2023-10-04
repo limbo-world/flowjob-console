@@ -4,16 +4,19 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
-    "dev": "vite",
-    "build": "vue-tsc && vite build",
-    "preview": "vite preview"
+    "serve": "vite --mode dev",
+    "build": "vite build --mode prod"
   },
   "dependencies": {
-    "@element-plus/icons-vue": "^2.0.10",
+    "@antv/x6": "2.2.1",
+    "@antv/x6-plugin-selection": "2.1.5",
+    "@antv/x6-vue-shape": "2.0.9",
+    "@dagrejs/dagre": "^1.0.2",
+    "@element-plus/icons-vue": "^2.1.0",
     "@types/lodash": "^4.14.191",
     "@types/node": "^18.11.18",
     "axios": "^1.2.3",
-    "element-plus": "^2.2.28",
+    "element-plus": "^2.3.0",
     "path": "^0.12.7",
     "sass": "^1.57.1",
     "vue": "^3.2.45",
