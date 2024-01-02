@@ -39,7 +39,7 @@ watch(plan, (newValue, oldValue) => {
 }, { deep: true })
 
 // 属性
-const props = defineProps<{ 
+const props = defineProps<{
   readonly: boolean,
 }>()
 
@@ -81,15 +81,14 @@ function initX6() {
     );
 
     // 自适应布局 & 居中
-    autoLayout(x6GraphRef.value, plan, 'TB');  
+    autoLayout(x6GraphRef.value, plan, 'TB');
     x6GraphRef.value.centerContent();
 
     // 注册 x6 控制器
-    debugger
     if (!readonly.value) {
         initX6GraphControl({
-            x6GraphRef, 
-            contextMenuRef, 
+            x6GraphRef,
+            contextMenuRef,
             navMenuRef,
             drawerRef,
             planRef: plan

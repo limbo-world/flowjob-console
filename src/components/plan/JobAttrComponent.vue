@@ -78,7 +78,7 @@ function emitAttibutesChange() {
  */
 function addAttributeItem() {
     attributeItems.value.push({
-        key: '', 
+        key: '',
         value: ''
     });
     emitAttibutesChange();
@@ -105,11 +105,16 @@ function attributeToItems(attr: Map<string,  string>): AttributeItem[] {
     }
 
     const items: AttributeItem[] = [];
-    attr.forEach((value, key) => {
-        items.push({
-            key, value
-        })
-    });
+
+    if (typeof attr == "object") {
+      for (let key in attr) {
+        items.push({"key": key, "value": attr[key]})
+      }
+    } else {
+      attr.forEach((value, key) => {
+        items.push({key, value})
+      });
+    }
     return items;
 }
 

@@ -5,6 +5,9 @@ const dateInRange = (date:Date, rangeStart:Date, rangeEnd:Date) => {
 
 const formatTimestampYMDHMS = (timestamp:number) => {
     let date = new Date(timestamp)
+    if (timestamp == null) {
+        return '';
+    }
     return `${formatDateYMD(date)} ${formatDateHMS(date)}`;
 };
 
