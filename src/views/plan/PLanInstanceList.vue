@@ -26,9 +26,21 @@
             {{ TriggerTypeEnum.getByValue(scope.row.triggerType).label }}
           </template>
         </el-table-column>
-        <el-table-column prop="triggerAt" label="计划时间"></el-table-column>
-        <el-table-column prop="startAt" label="开始时间"></el-table-column>
-        <el-table-column prop="feedbackAt" label="结束时间"></el-table-column>
+        <el-table-column label="计划时间">
+          <template #default="scope">
+            {{ DateUtils.formatTimestampYMDHMS(scope.row.triggerAt) }}
+          </template>
+        </el-table-column>
+        <el-table-column label="开始时间">
+          <template #default="scope">
+            {{ DateUtils.formatTimestampYMDHMS(scope.row.startAt) }}
+          </template>
+        </el-table-column>
+        <el-table-column label="结束时间">
+          <template #default="scope">
+            {{ DateUtils.formatTimestampYMDHMS(scope.row.feedbackAt) }}
+          </template>
+        </el-table-column>
         <el-table-column label="状态" width="100">
           <template #default="scope">
             {{ PlanStatusEnum.getByValue(scope.row.status).label }}
@@ -60,6 +72,7 @@ import {getCurrentInstance, reactive, ref} from "vue";
 import {useRouter} from 'vue-router'
 import {PlanStatusEnum, TriggerTypeEnum} from '@/types/console-enums';
 import PlanInstanceDetailComponent from '@/components/plan/PlanInstanceDetailComponent.vue'
+import DateUtils from '@/libs/utils/DateUtils'
 
 const {proxy}: any = getCurrentInstance();
 

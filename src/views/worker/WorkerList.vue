@@ -15,10 +15,9 @@
       <el-table :data="workers">
         <el-table-column prop="workerId" label="ID" width="150"></el-table-column>
         <el-table-column prop="name" label="名称" width="150"></el-table-column>
-        <el-table-column prop="protocol" label="通信协议" width="100"></el-table-column>
-        <el-table-column label="地址" width="150">
+        <el-table-column label="地址" width="200">
           <template #default="scope">
-            {{ scope.row.host + ":" + scope.row.port }}
+            {{ scope.row.protocol + "//" + scope.row.host + ":" + scope.row.port }}
           </template>
         </el-table-column>
         <el-table-column prop="availableCpu" label="剩余CPU" width="100"></el-table-column>
