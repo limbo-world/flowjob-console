@@ -102,15 +102,15 @@ const errorMsg = ref("");
 let jobInstances = ref([])
 let tasks = ref([])
 
-const props = defineProps<{visible: boolean, planInstanceId: string}>()
+const props = defineProps<{visible: boolean, instanceId: string}>()
 
 const emit = defineEmits<{ (e: 'handleClose', val: boolean): void }>()
 
 const jobInstanceVisible = toRef(props, "visible");
-const planInstanceId = toRef(props, "planInstanceId");
+const instanceId = toRef(props, "instanceId");
 
 const jobInstanceQueryForm = reactive({
-  planInstanceId: '',
+  instanceId: '',
   current: 1,
   size: 10,
   total: 0
@@ -125,7 +125,7 @@ const taskQueryForm = reactive({
 
 watch(jobInstanceVisible, (newVal, oldVal) => {
   if (newVal) {
-    jobInstanceQueryForm.planInstanceId = planInstanceId.value;
+    jobInstanceQueryForm.instanceId = instanceId.value;
     loadJobInstances()
   }
 })

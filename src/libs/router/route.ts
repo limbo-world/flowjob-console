@@ -15,6 +15,10 @@ export default [
                 component: () => import("@/views/plan/PlanList.vue"),
             },
             {
+                path: '/delay-instance/list',
+                component: () => import("@/views/instance/DelayInstanceList.vue"),
+            },
+            {
                 path: '/standalone-plan/edit',
                 component: () => import("@/views/plan/StandalonePlanEdit.vue"),
             },
@@ -24,7 +28,7 @@ export default [
             },
             {
                 path: '/plan/instance/list',
-                component: () => import("@/views/plan/PLanInstanceList.vue"),
+                component: () => import("@/views/instance/PLanInstanceList.vue"),
             },
             {
                 path: '/plan/workflow/detail',

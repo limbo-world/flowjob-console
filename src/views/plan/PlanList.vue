@@ -29,6 +29,11 @@
                         {{ ScheduleTypeEnum.getByValue(scope.row.scheduleType).label }}
                     </template>
                 </el-table-column>
+              <el-table-column label="触发方式" align="center" width="120">
+                <template #default="scope">
+                  {{ TriggerTypeEnum.getByValue(scope.row.triggerType).label }}
+                </template>
+              </el-table-column>
                 <el-table-column label="是否启用" align="center" width="100">
                     <template #default="scope">
                         <el-switch v-model="scope.row.enabled" @change="v => changeEnable(scope.row.planId, v)"
@@ -84,12 +89,12 @@
 </template>
 
 <script setup lang="ts">
-import { CirclePlus, Search } from '@element-plus/icons-vue'
-import { getCurrentInstance, onMounted, reactive, ref } from "vue";
-import { useRouter } from 'vue-router'
-import { PlanTypeEnum, ScheduleTypeEnum } from '@/types/console-enums';
-import { ElMessage } from "element-plus";
-import { PlanDTO } from '@/types/swagger-ts-api';
+import {CirclePlus, Search} from '@element-plus/icons-vue'
+import {getCurrentInstance, onMounted, reactive, ref} from "vue";
+import {useRouter} from 'vue-router'
+import {PlanTypeEnum, ScheduleTypeEnum, TriggerTypeEnum} from '@/types/console-enums';
+import {ElMessage} from "element-plus";
+import {PlanDTO} from '@/types/swagger-ts-api';
 
 const { proxy }: any = getCurrentInstance();
 
@@ -206,7 +211,7 @@ const toPlanInfo = (planId: string, planType: number, edit: any) => {
 }
 
 const schedulePlan = (planId: string) => {
-    proxy.$request.post(`/api/v1/plan/schedule?planId=${planId}`).then((response: any) => {
+    proxy.$request.post(`/api/v1/plan-instance/create-schedule`, {planId: planId}).then((response: any) => {
         ElMessage({
             message: '操作成功',
             type: 'success',

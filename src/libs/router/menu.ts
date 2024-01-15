@@ -11,6 +11,12 @@ export default [
         name: "menus.planList",
         route: "/plan/list"
     },
+    {
+        code: "300",
+        icon: "el-icon-calendar",
+        name: "menus.delayInstanceList",
+        route: "/delay-instance/list"
+    },
     // {
     //     code: "200",
     //     icon: "el-icon-menu",
@@ -30,7 +36,7 @@ export default [
     //     ]
     // },
     {
-        code: "300",
+        code: "400",
         icon: "el-icon-mostly-cloudy",
         name: "menus.workerList",
         route: "/worker/list"

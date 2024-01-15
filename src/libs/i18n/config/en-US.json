@@ -3,6 +3,7 @@
         "home": "Home",
         "planManage": "Plan Manage",
         "planList": "Plan List",
+        "delayInstanceList": "Delay Instance",
         "planExecuteRecord": "Execute Record",
         "workerList": "Worker List"
     }

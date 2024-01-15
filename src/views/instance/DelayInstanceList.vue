@@ -13,19 +13,16 @@
           />
         </el-form-item>
         <el-form-item>
-          <el-button type="primary" @click="loadPlanInstances" :icon="Search">查询</el-button>
+          <el-button type="primary" @click="loadInstances" :icon="Search">查询</el-button>
         </el-form-item>
       </el-form>
     </el-header>
 
     <el-main>
-      <el-table :data="planInstances">
-        <el-table-column prop="planInstanceId" label="ID" width="150"></el-table-column>
-        <el-table-column label="触发类型" width="100">
-          <template #default="scope">
-            {{ TriggerTypeEnum.getByValue(scope.row.triggerType).label }}
-          </template>
-        </el-table-column>
+      <el-table :data="instances">
+        <el-table-column prop="instanceId" label="ID" width="150"></el-table-column>
+        <el-table-column prop="bizType" label="业务类型" width="150"></el-table-column>
+        <el-table-column prop="bizId" label="业务ID" width="150"></el-table-column>
         <el-table-column label="计划时间">
           <template #default="scope">
             {{ DateUtils.formatTimestampYMDHMS(scope.row.triggerAt) }}
@@ -48,7 +45,7 @@
         </el-table-column>
         <el-table-column label="操作" width="200">
           <template #default="scope">
-            <el-button link type="primary" @click="loadDetail(scope.$index, scope.row.planInstanceId)">详情</el-button>
+            <el-button link type="primary" @click="loadDetail(scope.$index, scope.row.instanceId)">详情</el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -63,7 +60,7 @@
 
   </el-container>
 
-  <PlanInstanceDetailComponent :visible="jobInstanceVisible" :planInstanceId="selectPlanInstanceId" @handleClose="() => jobInstanceVisible=false" />
+  <InstanceDetailComponent :visible="jobInstanceVisible" :instanceId="selectInstanceId" @handleClose="() => jobInstanceVisible=false" />
 </template>
 
 <script setup lang="ts">
@@ -71,55 +68,55 @@ import {Search} from '@element-plus/icons-vue'
 import {getCurrentInstance, reactive, ref} from "vue";
 import {useRouter} from 'vue-router'
 import {PlanStatusEnum, TriggerTypeEnum} from '@/types/console-enums';
-import PlanInstanceDetailComponent from '@/components/plan/PlanInstanceDetailComponent.vue'
+import InstanceDetailComponent from '@/components/plan/InstanceDetailComponent.vue'
 import DateUtils from '@/libs/utils/DateUtils'
 
 const {proxy}: any = getCurrentInstance();
 
 const router = useRouter();
-const planId = router.currentRoute.value.query.planId;
 
 const jobInstanceVisible = ref(false);
-const selectPlanInstanceId = ref();
+const selectInstanceId = ref();
 
 
 const triggerAtSelect = ref<[string, string]>(['', ''])
 const queryForm = reactive({
+  bizType: '',
+  bizId: '',
   triggerAtBegin: '',
   triggerAtEnd: '',
-  planId: planId,
   current: 1,
   size: 10,
   total: 0
 })
 
-const planInstances = ref([])
+const instances = ref([])
 
 // 加载列表
-const loadPlanInstances = () => {
+const loadInstances = () => {
   queryForm.triggerAtBegin = triggerAtSelect.value[0];
   queryForm.triggerAtEnd = triggerAtSelect.value[1];
-  proxy.$request.get(`/api/v1/plan-instance/page`, {params: queryForm}).then((response: any) => {
+  proxy.$request.get(`/api/v1/delay-instance/page`, {params: queryForm}).then((response: any) => {
     let page = response.data
-    planInstances.value = page.data;
+    instances.value = page.data;
     queryForm.total = page.total;
   });
 }
 
-const loadDetail = (idx: number, planInstanceId: string) => {
+const loadDetail = (idx: number, instanceId: string) => {
   // 如果是普通的 抽屉
   jobInstanceVisible.value = true
-  selectPlanInstanceId.value = planInstanceId
+  selectInstanceId.value = instanceId
   // 如果是 工作流 详情
 }
 
 const handleCurrentChange = (val: any) => {
   queryForm.current = val;
-  loadPlanInstances();
+  loadInstances();
 }
 
 // 初始化
-loadPlanInstances();
+loadInstances();
 
 </script>
 
