@@ -4,9 +4,21 @@
       <el-table-column prop="jobInstanceId" label="id"/>
       <el-table-column prop="jobId" label="JobID"/>
       <el-table-column prop="retryTimes" label="重试次数"/>
-      <el-table-column prop="triggerAt" label="计划时间"></el-table-column>
-      <el-table-column prop="startAt" label="开始时间"></el-table-column>
-      <el-table-column prop="endAt" label="结束时间"></el-table-column>
+      <el-table-column label="计划时间">
+        <template #default="scope">
+          {{ DateUtils.formatTimestampYMDHMS(scope.row.triggerAt) }}
+        </template>
+      </el-table-column>
+      <el-table-column label="开始时间">
+        <template #default="scope">
+          {{ DateUtils.formatTimestampYMDHMS(scope.row.startAt) }}
+        </template>
+      </el-table-column>
+      <el-table-column label="结束时间">
+        <template #default="scope">
+          {{ DateUtils.formatTimestampYMDHMS(scope.row.endAt) }}
+        </template>
+      </el-table-column>
       <el-table-column label="状态" width="100">
         <template #default="scope">
           {{ JobStatusEnum.getByValue(scope.row.status).label }}
@@ -38,8 +50,16 @@
           {{ TaskTypeEnum.getByValue(scope.row.type).label }}
         </template>
       </el-table-column>
-      <el-table-column prop="startAt" label="开始时间"></el-table-column>
-      <el-table-column prop="endAt" label="结束时间"></el-table-column>
+      <el-table-column label="开始时间">
+        <template #default="scope">
+          {{ DateUtils.formatTimestampYMDHMS(scope.row.startAt) }}
+        </template>
+      </el-table-column>
+      <el-table-column label="结束时间">
+        <template #default="scope">
+          {{ DateUtils.formatTimestampYMDHMS(scope.row.endAt) }}
+        </template>
+      </el-table-column>
       <el-table-column prop="result" label="结果"></el-table-column>
       <el-table-column label="状态" width="100">
         <template #default="scope">
@@ -71,6 +91,7 @@
 <script setup lang="ts">
 import {JobStatusEnum, TaskStatusEnum, TaskTypeEnum} from '@/types/console-enums';
 import {getCurrentInstance, reactive, ref, toRef, watch} from "vue";
+import DateUtils from '@/libs/utils/DateUtils'
 
 const {proxy}: any = getCurrentInstance();
 
@@ -81,15 +102,15 @@ const errorMsg = ref("");
 let jobInstances = ref([])
 let tasks = ref([])
 
-const props = defineProps<{visible: boolean, planInstanceId: string}>()
+const props = defineProps<{visible: boolean, instanceId: string}>()
 
 const emit = defineEmits<{ (e: 'handleClose', val: boolean): void }>()
 
 const jobInstanceVisible = toRef(props, "visible");
-const planInstanceId = toRef(props, "planInstanceId");
+const instanceId = toRef(props, "instanceId");
 
 const jobInstanceQueryForm = reactive({
-  planInstanceId: '',
+  instanceId: '',
   current: 1,
   size: 10,
   total: 0
@@ -104,7 +125,7 @@ const taskQueryForm = reactive({
 
 watch(jobInstanceVisible, (newVal, oldVal) => {
   if (newVal) {
-    jobInstanceQueryForm.planInstanceId = planInstanceId.value;
+    jobInstanceQueryForm.instanceId = instanceId.value;
     loadJobInstances()
   }
 })
