@@ -2,6 +2,12 @@
   <el-container>
     <el-header class="padding-top-xs" height="50px">
       <el-form ref="searchForm" :inline="true">
+        <el-form-item label="业务类型">
+          <el-input v-model="queryForm.bizType" placeholder="请输入"></el-input>
+        </el-form-item>
+        <el-form-item label="业务ID">
+          <el-input v-model="queryForm.bizId" placeholder="请输入"></el-input>
+        </el-form-item>
         <el-form-item label="期望触发时间">
           <el-date-picker
               v-model="triggerAtSelect"
